@@ -66,6 +66,10 @@ class Motor:
     ):
         now = time.monotonic()
         
+        # TODO fix
+        if duty > 0.05 or duty < -0.05:
+            raise("Duty too big :tongue emoji:")
+        
         # set the state machine, with the rest handled in the controller
         self._duty = duty
         self._end_time = now + duration
@@ -75,6 +79,7 @@ class Motor:
 
     def check_faults(self):
         # there are other faults. but i gotta write them all out one by one and im a bit lazy. ill do it later
+        print("Motor ", self.id)
         print("Current stator fault:", self.motor.get_fault_stator_curr_limit())
         print("Sticky stator fault:", self.motor.get_sticky_fault_stator_curr_limit())
         print("Current stator fault:", self.motor.get_fault_bridge_brownout())

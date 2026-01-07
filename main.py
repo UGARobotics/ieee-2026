@@ -3,11 +3,15 @@ from utils.motor import Motor
 from subsystems.drivetrain import Drivetrain
 from autonomous.routines import basic_auto
 
+import time
+
 # initialize motors
 front_right = Motor(0)
 front_left = Motor(1)
 back_left = Motor(2)
 back_right = Motor(3)
+
+time.sleep(3)
 
 # initialize subsystems
 drivetrain = Drivetrain([front_left, front_right, back_left, back_right])

@@ -1,4 +1,4 @@
-from time import time
+import time
 
 from utils.motor import Motor
 
@@ -46,6 +46,12 @@ class Drivetrain:
         end_time = time.monotonic() + duration
         while time.monotonic() < end_time:
             yield
+
+    def check_all_faults(self):
+        self.motors[0].check_faults()
+        self.motors[1].check_faults()
+        self.motors[2].check_faults()
+        self.motors[3].check_faults()
 
     def stop(self):
         for m in self.motors:

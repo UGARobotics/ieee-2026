@@ -1,4 +1,4 @@
-from time import time
+import time
 from phoenix6.unmanaged import feed_enable
 
 class Scheduler:
