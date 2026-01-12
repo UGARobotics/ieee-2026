@@ -1,4 +1,5 @@
 from scheduler.scheduler import Scheduler
+from subsystems.odometry import Odometry
 from utils.motor import Motor
 from subsystems.drivetrain import Drivetrain
 from autonomous.routines import basic_auto
@@ -15,11 +16,12 @@ time.sleep(3)
 
 # initialize subsystems
 drivetrain = Drivetrain([front_left, front_right, back_left, back_right])
+odometry = Odometry()
 
 scheduler = Scheduler(tick_hz=50)
 scheduler.add_subsystem(drivetrain)
-# scheduler.add_subsystem(servo_subsystem)
-# scheduler.add_subsystem(odom_subsystem)
+scheduler.add_subsystem(odometry)
+# scheduler.add_subsystem(servo_system)
 
 # run the auto routine
 try:

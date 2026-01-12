@@ -123,7 +123,7 @@ class PinpointI2C:
 		if verbose:
 			print(f"[odom] init: addr=0x{self.address:02X} bus={self.bus_num}")
 		
-		time.sleep(0.1)
+		time.sleep(0.5)
 		self.check_identity()
 		
 		status = self.read_status()

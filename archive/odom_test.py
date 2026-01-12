@@ -1,6 +1,6 @@
 from time import sleep
 
-from odom import PinpointI2C
+from utils.odom_handler import PinpointI2C
 
 """
 with PinpointI2C(bus=1, address=0x31, verbose=True) as pp:
