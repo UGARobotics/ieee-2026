@@ -67,8 +67,8 @@ class Motor:
         now = time.monotonic()
         
         # TODO fix
-        if duty > 0.05 or duty < -0.05:
-            raise("Duty too big :tongue emoji:")
+        #if duty > 0.05 or duty < -0.05:
+        #    raise("Duty too big :tongue emoji:")
         
         # set the state machine, with the rest handled in the controller
         self._duty = duty
