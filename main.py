@@ -26,7 +26,7 @@ scheduler.add_subsystem(odometry)
 # run the auto routine
 try:
     # this is going to run until the routine is complete
-    scheduler.run_routine(basic_auto(drivetrain))
+    scheduler.run_routine(basic_auto(drivetrain, odometry))
 
 except KeyboardInterrupt:
     # emergency stop

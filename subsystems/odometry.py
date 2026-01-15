@@ -19,6 +19,10 @@ class Odometry:
         self.x = 0.0
         self.y = 0.0
 
+    def get_position(self) -> tuple[float, float]:
+        """Returns the current (x, y) position in mm"""
+        return (self.x, self.y)
+
     def update(self):
         """Called every scheduler tick"""
         with self.odom as pp:
