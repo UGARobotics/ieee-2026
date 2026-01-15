@@ -15,8 +15,8 @@ back_right = Motor(3)
 time.sleep(3)
 
 # initialize subsystems
-drivetrain = Drivetrain([front_left, front_right, back_left, back_right])
 odometry = Odometry()
+drivetrain = Drivetrain([front_left, front_right, back_left, back_right])
 
 scheduler = Scheduler(tick_hz=50)
 scheduler.add_subsystem(drivetrain)

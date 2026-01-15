@@ -13,7 +13,7 @@ class Odometry:
             bus=bus,
             address=address,
             ticks_per_mm=ticks_per_mm,
-            verbose=True
+            verbose=False
         )
         
         self.x = 0.0
@@ -30,18 +30,16 @@ class Odometry:
             if self.odom.verbose:
                 print(f"Odometry Position: x={pos.x} mm, y={pos.y} mm")
 
-            self.x = pos.x
-            self.y = pos.y
-
+            self.x += pos.x
+            self.y += pos.y
 
     def reset(self):
         """Reset odometry position to (0,0)"""
         with self.odom as pp:
-            pp.reset_position()
+            pp.reset_imu_and_pos()
             if self.odom.verbose:
                 print("Odometry position reset to (0, 0)")
 
     def stop(self):
         """Stop everything in this subsystem immediately"""
-        self.reset()        
-        pass
+        self.reset()

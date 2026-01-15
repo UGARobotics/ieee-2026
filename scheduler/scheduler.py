@@ -15,7 +15,7 @@ class Scheduler:
         """Update all the subsystems and feed the enable signal"""
         for s in self.subsystems:
             s.update()
-        feed_enable(0.1)  # feed the enable signal
+        feed_enable(1.0)  # feed the enable signal
 
     def stop_all(self):
         """Stop all subsystems immediately"""
