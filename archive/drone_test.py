@@ -1,48 +1,61 @@
+
+"""
+This script shows a simple scripted flight path using the MotionCommander class.
+
+Simple example that connects to the crazyflie at `URI` and runs a
+sequence. Change the URI variable to your Crazyflie configuration.
+"""
 import logging
-import sys
 import time
-from threading import Event
 
 import cflib.crtp
-from cflib.crazyflie import Crazyflie
 from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
 from cflib.positioning.motion_commander import MotionCommander
-from cflib.utils import uri_helper
 
-URI = uri_helper.uri_from_env(default='radio://0/80/2M/E7E7E7E7E7')
+URI = 'radio://0/80/2M/E7E7E7E7E7'
 
-DEFAULT_HEIGHT = 0.5
-
-deck_attached_event = Event()
-
+# Only output errors from the logging framework
 logging.basicConfig(level=logging.ERROR)
 
-def take_off_simple(scf):
-    with MotionCommander(scf, default_height=DEFAULT_HEIGHT) as mc:
-        time.sleep(3)
-        mc.stop()
-
-
-def param_deck_flow(name, value_str):
-    ...
 
 if __name__ == '__main__':
-    cflib.crtp.init_drivers()
+    # Initialize the low-level drivers (don't list the debug drivers)
+    cflib.crtp.init_drivers(enable_debug_driver=False)
 
-    with SyncCrazyflie(URI, cf=Crazyflie(rw_cache='./cache')) as scf:
-
-        scf.cf.param.add_update_callback(group='deck', name='bcFlow2',
-                                         cb=param_deck_flow)
-        time.sleep(1)
-
-        if not deck_attached_event.wait(timeout=5):
-            print('No flow deck detected!')
-            sys.exit(1)
-
+    with SyncCrazyflie(URI) as scf:
         # Arm the Crazyflie
         scf.cf.platform.send_arming_request(True)
         time.sleep(1.0)
 
-        take_off_simple(scf)
+        # We take off when the commander is created
+        with MotionCommander(scf) as mc:
+            print('Taking off!')
+            time.sleep(1)
 
+            # There is a set of functions that move a specific distance
+            # We can move in all directions
+            print('Moving forward 0.5m')
+            mc.forward(0.5)
+            # Wait a bit
+            time.sleep(1)
 
+            print('Moving up 0.2m')
+            mc.up(0.2)
+            # Wait a bit
+            time.sleep(1)
+
+            print('Moving down 0.2m')
+            mc.down(0.2)
+            # Wait a bit
+            time.sleep(1)
+
+            print('Rolling left 0.2m at 0.6m/s')
+            mc.left(0.2, velocity=0.6)
+            # Wait a bit
+            time.sleep(1)
+
+            print('Moving forward 0.5m')
+            mc.forward(0.5)
+
+            # We land when the MotionCommander goes out of scope
+            print('Landing!')
