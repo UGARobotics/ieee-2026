@@ -18,6 +18,8 @@ class Motor:
         canivore="Main", 
         stator_current_limit=120, 
         stator_current_limit_enable=True,
+        supply_current_limit=15,
+        supply_current_limit_enable=True,
         differential_position=0,
         pid=(0.012, 0.08, 0.0) # Just default constants found by playing with motors with no load. Adjust accordingly.
     ):
@@ -52,7 +54,9 @@ class Motor:
         print(f"Setting stator current limit to {stator_current_limit}...")
         lmt_cfg = CurrentLimitsConfigs()
         lmt_cfg.stator_current_limit = stator_current_limit
-        lmt_cfg.stator_current_limit_enable = stator_current_limit_enable
+        lmt_cfg.stator_current_limit_enable = stator_current_limit_enable 
+        lmt_cfg.supply_current_limit = supply_current_limit
+        lmt_cfg.supply_current_limit_enable = supply_current_limit_enable
         self.motor.configurator.apply(lmt_cfg)
         time.sleep(0.2)
         print(f"Current configurations applied.")
@@ -98,6 +102,7 @@ class Motor:
 
     def check_faults(self):
         # there are other faults. but i gotta write them all out one by one and im a bit lazy. ill do it later
+        print("-----")
         print("Motor ", self.id)
         print("Current stator fault:", self.motor.get_fault_stator_curr_limit())
         print("Sticky stator fault:", self.motor.get_sticky_fault_stator_curr_limit())
