@@ -8,40 +8,40 @@ class Drivetrain:
         self.motors = motors
 
     def go_forward(self, duty, duration):
-        self.motors[0].move(-duty, duration)  # front left
-        self.motors[1].move(duty, duration)  # front right
-        self.motors[2].move(-duty, duration)  # back left
-        self.motors[3].move(duty, duration)  # back right
+        self.motors[0].move(duty, duration)  # front left
+        self.motors[1].move(-duty, duration)  # front right
+        self.motors[2].move(duty, duration)  # back left
+        self.motors[3].move(-duty, duration)  # back right
 
         end_time = time.monotonic() + duration
         while time.monotonic() < end_time:
             yield
 
     def go_backward(self, duty, duration):
-        self.motors[0].move(duty, duration)  # front left
-        self.motors[1].move(-duty, duration)  # front right
-        self.motors[2].move(duty, duration)  # back left
-        self.motors[3].move(-duty, duration)  # back right
+        self.motors[0].move(-duty, duration)  # front left
+        self.motors[1].move(duty, duration)  # front right
+        self.motors[2].move(-duty, duration)  # back left
+        self.motors[3].move(duty, duration)  # back right
 
         end_time = time.monotonic() + duration
         while time.monotonic() < end_time:
             yield
 
     def turn_left(self, duty, duration):
-        self.motors[0].move(-duty, duration)  # front left
-        self.motors[1].move(-duty, duration)  # front right
-        self.motors[2].move(-duty, duration)  # back left
-        self.motors[3].move(-duty, duration)  # back right
+        self.motors[0].move(duty, duration)  # front left
+        self.motors[1].move(duty, duration)  # front right
+        self.motors[2].move(duty, duration)  # back left
+        self.motors[3].move(duty, duration)  # back right
         
         end_time = time.monotonic() + duration
         while time.monotonic() < end_time:
             yield
 
     def turn_right(self, duty, duration):
-        self.motors[0].move(duty, duration)  # front left
-        self.motors[1].move(duty, duration)  # front right
-        self.motors[2].move(duty, duration)  # back left
-        self.motors[3].move(duty, duration)  # back right
+        self.motors[0].move(-duty, duration)  # front left
+        self.motors[1].move(-duty, duration)  # front right
+        self.motors[2].move(-duty, duration)  # back left
+        self.motors[3].move(-duty, duration)  # back right
         
         end_time = time.monotonic() + duration
         while time.monotonic() < end_time:
