@@ -2,7 +2,7 @@ from scheduler.scheduler import Scheduler
 from subsystems.odometry import Odometry
 from utils.motor import Motor
 from subsystems.drivetrain import Drivetrain
-from autonomous.routines import basic_auto
+from autonomous.routines import basic_auto, tester_auto
 
 import time
 
@@ -26,7 +26,7 @@ scheduler.add_subsystem(drivetrain)
 # run the auto routine
 try:
     # this is going to run until the routine is complete
-    scheduler.run_routine(basic_auto(drivetrain))
+    scheduler.run_routine(tester_auto(drivetrain))
 
 except KeyboardInterrupt:
     # emergency stop
