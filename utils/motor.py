@@ -72,9 +72,9 @@ class Motor:
         # Setting PID configs, see above TODO regarding differential slot profiles
         print("Applying PID configurations...")
         pid_cfg = Slot0Configs()
-        pid_cfg.kP = pid[0]
-        pid_cfg.kI = pid[1]
-        pid_cfg.kD = pid[2]
+        pid_cfg.k_p = pid[0]
+        pid_cfg.k_i = pid[1]
+        pid_cfg.k_d = pid[2]
         self.motor.configurator.apply(pid_cfg)
         time.sleep(0.2)
         print("PID configurations applied.")
@@ -87,6 +87,7 @@ class Motor:
         velocity=0.0,
         duration=1.0
     ):
+
         now = time.monotonic()
         
         # set the state machine, with the rest handled in the controller
@@ -95,7 +96,7 @@ class Motor:
         self._state = Motor.RUNNING
 
         self.motor.set_control(DifferentialVelocityDutyCycle(
-            target_velocity=velocity, 
+            target_velocity=self._velocity, 
             differential_slot=self.differential_slot, 
             differential_position=self.differential_position
         ))
