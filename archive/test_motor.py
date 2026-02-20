@@ -11,39 +11,20 @@ os.environ["CTR_TARGET"] = "Hardware"
 canivore="Main" 
 stator_current_limit=120 
 stator_current_limit_enable=True
-motor0 = TalonFX(0, canivore)
-motor1 = TalonFX(1, canivore)
-motor2 = TalonFX(2, canivore)
-motor3 = TalonFX(3, canivore)
-
+motor0 = TalonFX(1, canivore)
 print("Initializing motor...")
 
 print("Clearing faults...")
 motor0.clear_sticky_faults()
-motor1.clear_sticky_faults()
-motor2.clear_sticky_faults()
-motor3.clear_sticky_faults()
 time.sleep(0.5)
 print("Cleared.")
 
 # Not sure if these current limits are actually needed. but why not?
 print(f"Setting stator current limit to {stator_current_limit}...")
 lmt_cfg0 = CurrentLimitsConfigs()
-lmt_cfg1 = CurrentLimitsConfigs()
-lmt_cfg2 = CurrentLimitsConfigs()
-lmt_cfg3 = CurrentLimitsConfigs()
 lmt_cfg0.stator_current_limit = stator_current_limit
 lmt_cfg0.stator_current_limit_enable = stator_current_limit_enable
-lmt_cfg1.stator_current_limit = stator_current_limit
-lmt_cfg1.stator_current_limit_enable = stator_current_limit_enable
-lmt_cfg2.stator_current_limit = stator_current_limit
-lmt_cfg2.stator_current_limit_enable = stator_current_limit_enable
-lmt_cfg3.stator_current_limit = stator_current_limit
-lmt_cfg3.stator_current_limit_enable = stator_current_limit_enable
 motor0.configurator.apply(lmt_cfg0)
-motor1.configurator.apply(lmt_cfg1)
-motor2.configurator.apply(lmt_cfg2)
-motor3.configurator.apply(lmt_cfg3)
 time.sleep(0.5)
 print(f"Current configurations applied.")
 
@@ -51,39 +32,18 @@ print(f"Current configurations applied.")
 # Note: Changes can be made here and above if the settings don't work with the bot
 print("Applying base configurations...")
 cfg0 = TalonFXConfiguration()
-cfg1 = TalonFXConfiguration()
-cfg2 = TalonFXConfiguration()
-cfg3 = TalonFXConfiguration()
 motor0.configurator.apply(cfg0)
-motor1.configurator.apply(cfg1)
-motor2.configurator.apply(cfg2)
-motor3.configurator.apply(cfg3)
 time.sleep(0.5)
 print("Base configurations applied.")
 
 
 print("Setting the slot 0 PID configs...")
 pid_conf0 = Slot0Configs()
-pid_conf1 = Slot0Configs()
-pid_conf2 = Slot0Configs()
-pid_conf3 = Slot0Configs()
 
 pid_conf0.k_p = 0.012
 pid_conf0.k_i = 0.008
 
-pid_conf1.k_p = 0.008
-pid_conf1.k_i = 0.008
-
-pid_conf2.k_p = 0.008
-pid_conf2.k_i = 0.008
-
-pid_conf3.k_p = 0.008
-pid_conf3.k_i = 0.008
-
 motor0.configurator.apply(pid_conf0)
-motor1.configurator.apply(pid_conf1)
-motor2.configurator.apply(pid_conf2)
-motor3.configurator.apply(pid_conf3)
 time.sleep(0.5)
 print("PID configurations applied.")
 
@@ -94,25 +54,25 @@ feed_enable(20)
 #motor0.set_control(DifferentialVelocityDutyCycle(target_velocity=2, differential_slot=0, differential_position=0))
 #motor0.set_control(DifferentialVelocityDutyCycle(target_velocity=5, differential_slot=0, differential_position=0))
 #motor0.set_control(DifferentialVelocityDutyCycle(target_velocity=7, differential_slot=0, differential_position=0))
-motor0.set_control(DifferentialVelocityDutyCycle(target_velocity=50, differential_slot=0, differential_position=0))
+motor0.set_control(DifferentialVelocityDutyCycle(target_velocity=50, differential_slot=0, differential_position=0)
 
 #time.sleep(1)
 #motor1.set_control(DifferentialVelocityDutyCycle(target_velocity=2, differential_slot=0, differential_position=0))
 #motor1.set_control(DifferentialVelocityDutyCycle(target_velocity=5, differential_slot=0, differential_position=0))
 #motor1.set_control(DifferentialVelocityDutyCycle(target_velocity=7, differential_slot=0, differential_position=0))
-motor1.set_control(DifferentialVelocityDutyCycle(target_velocity=50, differential_slot=0, differential_position=0))
+
 
 #time.sleep(1)
 #motor2.set_control(DifferentialVelocityDutyCycle(target_velocity=2, differential_slot=0, differential_position=0))
 #motor2.set_control(DifferentialVelocityDutyCycle(target_velocity=5, differential_slot=0, differential_position=0))
 #motor2.set_control(DifferentialVelocityDutyCycle(target_velocity=7, differential_slot=0, differential_position=0))
-motor2.set_control(DifferentialVelocityDutyCycle(target_velocity=50, differential_slot=0, differential_position=0))
+
 
 #time.sleep(1)
 #motor3.set_control(DifferentialVelocityDutyCycle(target_velocity=2, differential_slot=0, differential_position=0))
 #motor3.set_control(DifferentialVelocityDutyCycle(target_velocity=5, differential_slot=0, differential_position=0))
 #motor3.set_control(DifferentialVelocityDutyCycle(target_velocity=7, differential_slot=0, differential_position=0))
-motor3.set_control(DifferentialVelocityDutyCycle(target_velocity=50, differential_slot=0, differential_position=0))
+
 time.sleep(10)
 
 print("Current stator fault:", motor0.get_fault_stator_curr_limit())
@@ -120,17 +80,3 @@ print("Sticky stator fault:", motor0.get_sticky_fault_stator_curr_limit())
 print("Current stator fault:", motor0.get_fault_bridge_brownout())
 print("Sticky stator fault:", motor0.get_sticky_fault_bridge_brownout())
 
-print("Current stator fault:", motor1.get_fault_stator_curr_limit())
-print("Sticky stator fault:", motor1.get_sticky_fault_stator_curr_limit())
-print("Current stator fault:", motor1.get_fault_bridge_brownout())
-print("Sticky stator fault:", motor1.get_sticky_fault_bridge_brownout())
-
-print("Current stator fault:", motor2.get_fault_stator_curr_limit())
-print("Sticky stator fault:", motor2.get_sticky_fault_stator_curr_limit())
-print("Current stator fault:", motor2.get_fault_bridge_brownout())
-print("Sticky stator fault:", motor2.get_sticky_fault_bridge_brownout())
-
-print("Current stator fault:", motor3.get_fault_stator_curr_limit())
-print("Sticky stator fault:", motor3.get_sticky_fault_stator_curr_limit())
-print("Current stator fault:", motor3.get_fault_bridge_brownout())
-print("Sticky stator fault:", motor3.get_sticky_fault_bridge_brownout())

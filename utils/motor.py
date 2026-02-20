@@ -18,6 +18,8 @@ class Motor:
         canivore="Main", 
         stator_current_limit=120, 
         stator_current_limit_enable=True,
+        supply_current_limit=15,
+        supply_current_limit_enable=True,
         differential_position=0,
         pid=(0.012, 0.08, 0.0) # Just default constants found by playing with motors with no load. Adjust accordingly.
     ):
@@ -52,7 +54,9 @@ class Motor:
         print(f"Setting stator current limit to {stator_current_limit}...")
         lmt_cfg = CurrentLimitsConfigs()
         lmt_cfg.stator_current_limit = stator_current_limit
-        lmt_cfg.stator_current_limit_enable = stator_current_limit_enable
+        lmt_cfg.stator_current_limit_enable = stator_current_limit_enable 
+        lmt_cfg.supply_current_limit = supply_current_limit
+        lmt_cfg.supply_current_limit_enable = supply_current_limit_enable
         self.motor.configurator.apply(lmt_cfg)
         time.sleep(0.2)
         print(f"Current configurations applied.")
@@ -68,9 +72,9 @@ class Motor:
         # Setting PID configs, see above TODO regarding differential slot profiles
         print("Applying PID configurations...")
         pid_cfg = Slot0Configs()
-        pid_cfg.kP = pid[0]
-        pid_cfg.kI = pid[1]
-        pid_cfg.kD = pid[2]
+        pid_cfg.k_p = pid[0]
+        pid_cfg.k_i = pid[1]
+        pid_cfg.k_d = pid[2]
         self.motor.configurator.apply(pid_cfg)
         time.sleep(0.2)
         print("PID configurations applied.")
@@ -83,6 +87,7 @@ class Motor:
         velocity=0.0,
         duration=1.0
     ):
+
         now = time.monotonic()
         
         # set the state machine, with the rest handled in the controller
@@ -91,13 +96,14 @@ class Motor:
         self._state = Motor.RUNNING
 
         self.motor.set_control(DifferentialVelocityDutyCycle(
-            target_velocity=velocity, 
+            target_velocity=self._velocity, 
             differential_slot=self.differential_slot, 
             differential_position=self.differential_position
         ))
 
     def check_faults(self):
         # there are other faults. but i gotta write them all out one by one and im a bit lazy. ill do it later
+        print("-----")
         print("Motor ", self.id)
         print("Current stator fault:", self.motor.get_fault_stator_curr_limit())
         print("Sticky stator fault:", self.motor.get_sticky_fault_stator_curr_limit())
