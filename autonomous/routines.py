@@ -2,10 +2,13 @@ import time
 
 """Contains all of the different autonomous routines/runs over time. """
 
-def tester_auto(drivetrain):
+def tester_auto(drivetrain, odometry):
     """Auto routine that you can change for quick tests."""
 
     yield from drivetrain.turn_right(15, 2.2)
+    odometry.get_position()
+    yield from drivetrain.go_forward(15, 2.0)
+    odometry.get_position()
 
     
 def timed_auto(drivetrain):

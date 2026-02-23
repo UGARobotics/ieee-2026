@@ -15,18 +15,18 @@ back_right = Motor(3)
 time.sleep(3)
 
 # initialize subsystems
-#odometry = Odometry()
+odometry = Odometry()
 drivetrain = Drivetrain([front_left, front_right, back_left, back_right])
 
 scheduler = Scheduler(tick_hz=50)
 scheduler.add_subsystem(drivetrain)
-#scheduler.add_subsystem(odometry)
+scheduler.add_subsystem(odometry)
 # scheduler.add_subsystem(servo_system)
 
 # run the auto routine
 try:
     # this is going to run until the routine is complete
-    scheduler.run_routine(tester_auto(drivetrain))
+    scheduler.run_routine(tester_auto(drivetrain, odometry))
 
 except KeyboardInterrupt:
     # emergency stop

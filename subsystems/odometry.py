@@ -26,7 +26,7 @@ class Odometry:
     def update(self):
         """Called every scheduler tick"""
         with self.odom as pp:
-            pos = pp.read_bulk().pos
+            pos = pp.read_pose()
             if self.odom.verbose:
                 print(f"Odometry Position: x={pos.x} mm, y={pos.y} mm")
 
