@@ -4,11 +4,15 @@ import time
 
 def tester_auto(drivetrain, odometry):
     """Auto routine that you can change for quick tests."""
-
-    yield from drivetrain.turn_right(15, 2.2)
-    odometry.get_position()
-    yield from drivetrain.go_forward(15, 2.0)
-    odometry.get_position()
+    print(odometry.get_position())
+    yield from drivetrain.go_forward(15, 2.5)
+    print(odometry.get_position())
+    yield from drivetrain.strafe_left(15, 2.5)
+    print(odometry.get_position())
+    yield from drivetrain.go_backward(15, 2.5)
+    print(odometry.get_position())
+    yield from drivetrain.strafe_right(15, 2.5)
+    print(odometry.get_position())
 
     
 def timed_auto(drivetrain):
