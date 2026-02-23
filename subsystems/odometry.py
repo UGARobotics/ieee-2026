@@ -7,6 +7,7 @@ class Odometry:
     TICKS_PER_MM = 19.894   # Adjust if needed
     ADDRESS = 0x31          # Default I2C address for PinpointI2C
     BUS = 1                 # Default I2C bus number
+    POS_TO_INCH = 10.76666  # Position to inch
 
     def __init__(self, bus: int = BUS, address: int = ADDRESS, ticks_per_mm: float = TICKS_PER_MM):
         self.odom = PinpointI2C(
@@ -30,8 +31,8 @@ class Odometry:
             if self.odom.verbose:
                 print(f"Odometry Position: x={pos.x} mm, y={pos.y} mm")
 
-            self.x += pos.x
-            self.y += pos.y
+            self.x += (pos.x / self.POS_TO_INCH)
+            self.y += (pos.y / self.POS_TO_INCH)
 
     def reset(self):
         """Reset odometry position to (0,0)"""
