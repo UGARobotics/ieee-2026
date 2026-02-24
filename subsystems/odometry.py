@@ -7,7 +7,7 @@ class Odometry:
     TICKS_PER_MM = 19.894   # Adjust if needed
     ADDRESS = 0x31          # Default I2C address for PinpointI2C
     BUS = 1                 # Default I2C bus number
-    POS_TO_INCH = 10.76666  # Position to inch
+    POS_TO_INCH = 22.08333  # Position to inch
 
     def __init__(self, bus: int = BUS, address: int = ADDRESS, ticks_per_mm: float = TICKS_PER_MM):
         self.odom = PinpointI2C(
