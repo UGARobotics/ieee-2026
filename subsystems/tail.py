@@ -3,16 +3,16 @@ from utils.servo import Servo
 class Tail:
     """Subsystem for wagging the tail"""
 
-    def __init__(self, pin: int):
+    def __init__(self, pin=17):
         self.servo = Servo(pin)        
         self.queue = []
 
     def wag(self):
         """Wag the tail"""        
-        self.servo.set_angle(30)
-        self.servo.set_angle(210)
-        self.servo.set_angle(30)
-        self.servo.set_angle(210)
+        self.queue.append(30)
+        self.queue.append(210)
+        self.queue.append(30)
+        self.queue.append(210)
 
     def update(self):
         """Called every scheduler tick to update the servo position"""
