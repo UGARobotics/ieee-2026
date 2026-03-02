@@ -16,16 +16,16 @@ class Drivetrain:
     def go_forward(self, duty, distance):
         
         # loop until bot's position is within some threshold of the target position, with a timeout to prevent infinite loops
-        x, _ = self.odometry.get_position()
-        target_x = x + distance
+        _, y = self.odometry.get_position()
+        target_y = y + distance
 
         self.motors[0].move(duty)  # front left
         self.motors[1].move(-duty)  # front right
         self.motors[2].move(duty)  # back left
         self.motors[3].move(-duty)  # back right
 
-        while abs(x - target_x) > 0.1:  # 0.1 inch threshold
-            x, _ = self.odometry.get_position()
+        while abs(y - target_y) > 0.1:  # 0.1 inch threshold
+            _, y = self.odometry.get_position()
             yield
         
         self.motors[0].stop()

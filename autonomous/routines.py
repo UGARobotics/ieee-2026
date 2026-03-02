@@ -6,7 +6,7 @@ def tester_auto(drivetrain, odometry):
     # time per inch at speed of 20
 
     """Auto routine that you can change for quick tests."""
-    yield from drivetrain.go_forward(20, 12)
+    yield from drivetrain.go_forward(3, 12)
     print(odometry.get_position())
 
 def tester_auto_tail(tail):
