@@ -68,7 +68,6 @@ class PinpointI2C:
 		address: int = I2C_ADDR_DEFAULT,
 		init_on_open: bool = True,
 		init_timeout_s: float = 2.0,
-		poll_interval_s: float = 0.02,
 		reset_on_init: bool = True,
 		verbose: bool = False,
 		ticks_per_mm: float | None = None,
@@ -82,7 +81,6 @@ class PinpointI2C:
 		
 		self.init_on_open = init_on_open
 		self.init_timeout_s = init_timeout_s
-		self.poll_interval_s = poll_interval_s
 		self.reset_on_init = reset_on_init
 		self.verbose = verbose
 		
@@ -96,7 +94,6 @@ class PinpointI2C:
 		if self.init_on_open:
 			self.initialize(
 				timeout_s=self.init_timeout_s,
-				poll_interval_s=self.poll_interval_s,
 				reset=self.reset_on_init,
 				verbose=self.verbose,
 				ticks_per_mm=self.ticks_per_mm,
@@ -109,7 +106,6 @@ class PinpointI2C:
 	def initialize(
 		self,
 		timeout_s: float = 2.0,
-		poll_interval_s: float = 0.02,
 		reset: bool = True,
 		verbose: bool = False,
 		ticks_per_mm: float | None = None,
@@ -123,7 +119,7 @@ class PinpointI2C:
 		if verbose:
 			print(f"[odom] init: addr=0x{self.address:02X} bus={self.bus_num}")
 		
-		time.sleep(0.5)
+#		time.sleep(0.5)
 		self.check_identity()
 		
 		status = self.read_status()
@@ -136,13 +132,13 @@ class PinpointI2C:
 			raise PinpointI2CError("Y odometry pod not detected")
 		
 		# Wait ready before commands
-		self._wait_ready(timeout_s=timeout_s, poll_interval_s=poll_interval_s, verbose=verbose)
+		self._wait_ready(timeout_s=timeout_s, verbose=verbose)
 		
 		if reset:
 			if verbose:
 				print("[odom] issuing reset IMU+position")
 			self.reset_imu_and_pos()
-			self._wait_ready(timeout_s=timeout_s, poll_interval_s=poll_interval_s, verbose=verbose)
+			self._wait_ready(timeout_s=timeout_s, verbose=verbose)
 		
 		if verbose:
 			print(f"[odom] setting ticks/mm = {self.ticks_per_mm}")
@@ -163,7 +159,7 @@ class PinpointI2C:
 			final = self.read_status()
 			print(f"[odom] init complete: {self._decode_status(final)}")
 	
-	def _wait_ready(self, timeout_s: float, poll_interval_s: float, verbose: bool = False) -> None:
+	def _wait_ready(self, timeout_s: float, verbose: bool = False) -> None:
 		deadline = time.monotonic() + timeout_s
 		last_status = None
 		next_log = 0.0
@@ -181,7 +177,6 @@ class PinpointI2C:
 					if now >= next_log:
 						next_log = now + 0.2
 						print(f"[odom] waiting: invalud status 0x{last_status:08x} (ignoring)")
-				time.sleep(poll_interval_s)
 				continue
 			
 			# Fail if lose pods
@@ -208,8 +203,6 @@ class PinpointI2C:
 					next_log = now + 0.2
 					print(f"[odom] waiting: {self._decode_status(last_status)}")
 			
-			time.sleep(poll_interval_s)
-		
 		# timeout
 		raise PinpointI2CError(f"Timed out waiting for ready after {timeout_s:.2f}s")
 	

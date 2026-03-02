@@ -1,6 +1,6 @@
 from phoenix6.hardware import TalonFX
-from phoenix6.controls import DutyCycleOut
-from phoenix6.configs import TalonFXConfiguration, CurrentLimitsConfigs
+from phoenix6.controls import DifferentialVelocityDutyCycle
+from phoenix6.configs import TalonFXConfiguration, CurrentLimitsConfigs, Slot0Configs
 
 import os
 import time
@@ -17,12 +17,23 @@ class Motor:
         id, 
         canivore="Main", 
         stator_current_limit=120, 
-        stator_current_limit_enable=True
+        stator_current_limit_enable=True,
+        supply_current_limit=15,
+        supply_current_limit_enable=True,
+        differential_position=0,
+        pid=(0.012, 0.08, 0.0) # Just default constants found by playing with motors with no load. Adjust accordingly.
     ):
         # state machine management
         self._state = Motor.IDLE
         self._end_time = 0.0
-        self._duty = 0.0
+        self._velocity = 0.0
+        
+        # TODO: Fix - currently, this forcibly sets the PID profile of the motor to 0, but up to 3 can be
+        # saved and used accordingly
+
+        # config params
+        self.differential_slot = 0
+        self.differential_position = differential_position
 
         # may or may not be needed. pretty sure it is
         os.environ["CTR_TARGET"] = "Hardware"
@@ -36,16 +47,18 @@ class Motor:
         # Clear any sticky faults, likely brownout or some bs that's there
         print("Clearing faults...")
         self.motor.clear_sticky_faults()
-        time.sleep(0.5)
+        time.sleep(0.2)
         print("Cleared.")
 
         # Not sure if these current limits are actually needed. but why not?
         print(f"Setting stator current limit to {stator_current_limit}...")
         lmt_cfg = CurrentLimitsConfigs()
         lmt_cfg.stator_current_limit = stator_current_limit
-        lmt_cfg.stator_current_limit_enable = stator_current_limit_enable
+        lmt_cfg.stator_current_limit_enable = stator_current_limit_enable 
+        lmt_cfg.supply_current_limit = supply_current_limit
+        lmt_cfg.supply_current_limit_enable = supply_current_limit_enable
         self.motor.configurator.apply(lmt_cfg)
-        time.sleep(0.5)
+        time.sleep(0.2)
         print(f"Current configurations applied.")
 
         # Base configs should also already be applied but better to do it explicitly
@@ -53,52 +66,77 @@ class Motor:
         print("Applying base configurations...")
         cfg = TalonFXConfiguration()
         self.motor.configurator.apply(cfg)
-        time.sleep(0.5)
+        time.sleep(0.2)
         print("Base configurations applied.")
+
+        # Setting PID configs, see above TODO regarding differential slot profiles
+        print("Applying PID configurations...")
+        pid_cfg = Slot0Configs()
+        pid_cfg.k_p = pid[0]
+        pid_cfg.k_i = pid[1]
+        pid_cfg.k_d = pid[2]
+        self.motor.configurator.apply(pid_cfg)
+        time.sleep(0.2)
+        print("PID configurations applied.")
 
         # yay
         print(f"Motor {self.id} live!")
 
     def move(
         self,
-        duty,
+        velocity=0.0,
         duration=1.0
     ):
+
         now = time.monotonic()
         
-        # TODO fix
-        #if duty > 0.05 or duty < -0.05:
-        #    raise("Duty too big :tongue emoji:")
-        
         # set the state machine, with the rest handled in the controller
-        self._duty = duty
+        self._velocity = velocity
         self._end_time = now + duration
         self._state = Motor.RUNNING
 
-        self.motor.set_control(DutyCycleOut(duty))
+        self.motor.set_control(DifferentialVelocityDutyCycle(
+            target_velocity=self._velocity, 
+            differential_slot=self.differential_slot, 
+            differential_position=self.differential_position
+        ))
 
     def check_faults(self):
         # there are other faults. but i gotta write them all out one by one and im a bit lazy. ill do it later
+        print("-----")
         print("Motor ", self.id)
         print("Current stator fault:", self.motor.get_fault_stator_curr_limit())
         print("Sticky stator fault:", self.motor.get_sticky_fault_stator_curr_limit())
         print("Current stator fault:", self.motor.get_fault_bridge_brownout())
         print("Sticky stator fault:", self.motor.get_sticky_fault_bridge_brownout())
+        print("-----")
 
     def stop(self):
         self._state = Motor.IDLE
-        self._duty = 0.0
+        self._velocity = 0.0
         self._end_time = 0.0
-        self.motor.set_control(DutyCycleOut(0.0))
+        self.motor.set_control(DifferentialVelocityDutyCycle(
+            target_velocity=0.0, 
+            differential_slot=self.differential_slot, 
+            differential_position=self.differential_position
+        ))
         
     def update(self):
         if self._state == Motor.IDLE:
             return
 
         if time.monotonic() >= self._end_time:
-            self.motor.set_control(DutyCycleOut(0.0))
+            self.motor.set_control(DifferentialVelocityDutyCycle(
+                target_velocity=0.0, 
+                differential_slot=self.differential_slot,
+                differential_position=self.differential_position
+            ))
             self._state = Motor.IDLE
-            self._duty = 0.0
+            self._velocity = 0.0
             self._end_time = 0.0
         else:
-            self.motor.set_control(DutyCycleOut(self._duty))
+            self.motor.set_control(DifferentialVelocityDutyCycle(
+                target_velocity=self._velocity,
+                differential_slot=self.differential_slot,
+                differential_position=self.differential_position
+            ))
