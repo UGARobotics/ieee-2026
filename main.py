@@ -1,7 +1,6 @@
 from scheduler.scheduler import Scheduler
 from subsystems.odometry import Odometry
 from utils.motor import Motor
-from utils.servo import Servo
 from subsystems.drivetrain import Drivetrain
 from autonomous.routines import basic_auto, tester_auto
 

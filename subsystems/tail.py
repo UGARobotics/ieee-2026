@@ -4,11 +4,11 @@ class Tail:
     """Subsystem for wagging the tail"""
 
     def __init__(self, pin: int):
-        self.servo = Servo(pin)
+        self.servo = Servo(pin)        
+        self.queue = []
 
     def wag(self):
-        """Wag the tail"""
-
+        """Wag the tail"""        
         self.servo.set_angle(30)
         self.servo.set_angle(210)
         self.servo.set_angle(30)
@@ -16,6 +16,10 @@ class Tail:
 
     def update(self):
         """Called every scheduler tick to update the servo position"""
+        if self.servo._state == Servo.IDLE and self.queue:
+            next_angle = self.queue.pop(0)
+            self.servo.set_angle(next_angle)
+        
         self.servo.update()
 
     def stop(self):
