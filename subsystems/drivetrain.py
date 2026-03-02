@@ -6,6 +6,7 @@ class Drivetrain:
     
     TIME_PER_INCH   = 0.158333333     # Adjust value for testing
     TIME_PER_PI     = 4.2             # Adjust value for testing
+    THRESHOLD       = 0.1             # Threshold for checking bot position, accurate to 1/10in
 
     def __init__(self, motors: list[Motor]):
         # in order of front left, front right, back left, back right
@@ -73,6 +74,13 @@ class Drivetrain:
         self.motors[2].move(duty, duration)  # back left
         self.motors[3].move(duty, duration)  # back right
         
+        end_time = time.monotonic() + duration
+        while time.monotonic() < end_time:
+            yield
+
+    def go_forward_distance(self, duty, distance):
+        
+        self.go_forward(duty, distance)
         end_time = time.monotonic() + duration
         while time.monotonic() < end_time:
             yield
