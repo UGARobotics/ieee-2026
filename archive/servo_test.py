@@ -1,0 +1,29 @@
+import RPi.GPIO as GPIO
+import time
+
+PIN = 17
+FREQ = 50  # 50Hz servo frequency
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(PIN, GPIO.OUT)
+
+pwm = GPIO.PWM(PIN, FREQ)
+pwm.start(0)
+
+def set_pulse_width_us(us):
+    duty = (us / 20000.0) * 100.0
+    pwm.ChangeDutyCycle(duty)
+
+def set_angle(angle):
+    # map 0–300° to 500–2500 µs
+    pulse = 500 + (angle / 300.0) * 2000
+    set_pulse_width_us(pulse)
+
+
+for angle in range(0, 300, 10):
+    set_angle(angle)
+    time.sleep(0.5)
+
+    
+pwm.stop()
+GPIO.cleanup()

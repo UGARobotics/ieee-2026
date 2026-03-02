@@ -1,4 +1,5 @@
 from phoenix6.hardware import TalonFX
+from phoenix6.hardware.canrange import CANrange
 from phoenix6.controls import DutyCycleOut, DifferentialVelocityDutyCycle
 from phoenix6.configs import TalonFXConfiguration, CurrentLimitsConfigs, Slot0Configs
 from phoenix6.unmanaged import feed_enable
@@ -12,6 +13,11 @@ canivore="Main"
 stator_current_limit=120 
 stator_current_limit_enable=True
 motor0 = TalonFX(1, canivore)
+range = CANrange(0, canivore)
+
+print(range.get_distance())
+
+"""
 print("Initializing motor...")
 
 print("Clearing faults...")
@@ -80,3 +86,4 @@ print("Sticky stator fault:", motor0.get_sticky_fault_stator_curr_limit())
 print("Current stator fault:", motor0.get_fault_bridge_brownout())
 print("Sticky stator fault:", motor0.get_sticky_fault_bridge_brownout())
 
+"""
