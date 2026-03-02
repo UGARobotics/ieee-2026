@@ -14,7 +14,7 @@ class Tail:
         self.queue.append(30)
         self.queue.append(210)
 
-        while len(self.queue) != 0:
+        while len(self.queue) != 0 or self.servo._state == PositionalServo.RUNNING:
             yield
 
 
