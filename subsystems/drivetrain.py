@@ -1,31 +1,40 @@
 import time
 
 from utils.motor import Motor
+from subsystems.odometry import Odometry
 
 class Drivetrain:
     
     TIME_PER_INCH   = 0.158333333     # Adjust value for testing
     TIME_PER_PI     = 4.2             # Adjust value for testing
 
-    def __init__(self, motors: list[Motor]):
+    def __init__(self, motors: list[Motor], odometry: Odometry = None):
         # in order of front left, front right, back left, back right
         self.motors = motors
-        self._target_x = 0.0
-        self._target_y = 0.0
-
-    def go_forward_odom(self, duty, distance):
-        duration = distance * self.TIME_PER_INCH
-        self.motors[0].move(duty, duration)  # front left
-        self.motors[1].move(-duty, duration)  # front right
-        self.motors[2].move(duty, duration)  # back left
-        self.motors[3].move(-duty, duration)  # back right
-
-        end_time = time.monotonic() + duration
-        while time.monotonic() < end_time:
-            yield
-        
+        self.odometry = odometry
 
     def go_forward(self, duty, distance):
+        
+        # loop until bot's position is within some threshold of the target position, with a timeout to prevent infinite loops
+        x, _ = self.odometry.get_position()
+        target_x = x + distance
+
+        self.motors[0].move(duty)  # front left
+        self.motors[1].move(-duty)  # front right
+        self.motors[2].move(duty)  # back left
+        self.motors[3].move(-duty)  # back right
+
+        while abs(x - target_x) > 0.1:  # 0.1 inch threshold
+            x, _ = self.odometry.get_position()
+            yield
+        
+        self.motors[0].stop()
+        self.motors[1].stop()
+        self.motors[2].stop()
+        self.motors[3].stop()
+
+        
+    def go_forward_timed(self, duty, distance):
         duration = distance * self.TIME_PER_INCH
         self.motors[0].move(duty, duration)  # front left
         self.motors[1].move(-duty, duration)  # front right
@@ -36,7 +45,7 @@ class Drivetrain:
         while time.monotonic() < end_time:
             yield
 
-    def go_backward(self, duty, distance):
+    def go_backward_timed(self, duty, distance):
         duration = distance * self.TIME_PER_INCH
         self.motors[0].move(-duty, duration)  # front left
         self.motors[1].move(duty, duration)  # front right
@@ -47,7 +56,7 @@ class Drivetrain:
         while time.monotonic() < end_time:
             yield
 
-    def turn_left(self, duty, distance):
+    def turn_left_timed(self, duty, distance):
         duration = distance * self.TIME_PER_PI
         self.motors[0].move(duty, duration)  # front left
         self.motors[1].move(duty, duration)  # front right
@@ -58,7 +67,7 @@ class Drivetrain:
         while time.monotonic() < end_time:
             yield
 
-    def turn_right(self, duty, distance):
+    def turn_right_timed(self, duty, distance):
         duration = distance * self.TIME_PER_PI
         self.motors[0].move(-duty, duration)  # front left
         self.motors[1].move(-duty, duration)  # front right
@@ -69,7 +78,7 @@ class Drivetrain:
         while time.monotonic() < end_time:
             yield
 
-    def strafe_left(self, duty, distance):
+    def strafe_left_timed(self, duty, distance):
         duration = distance * self.TIME_PER_INCH
         self.motors[0].move(duty, duration)  # front left
         self.motors[1].move(duty, duration)  # front right
@@ -80,7 +89,7 @@ class Drivetrain:
         while time.monotonic() < end_time:
             yield
 
-    def strafe_right(self, duty, distance):
+    def strafe_right_timed(self, duty, distance):
         duration = distance * self.TIME_PER_INCH
         self.motors[0].move(-duty, duration)  # front left
         self.motors[1].move(-duty, duration)  # front right
