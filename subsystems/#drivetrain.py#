@@ -15,8 +15,30 @@ class Drivetrain:
 
     def go_forward_odom(self, duty, distance):
         duration = distance * self.TIME_PER_INCH
-        self.motors[0].move(duty, duration)  # front left
-        self.motors[1].move(-duty, duration)  # front right
+        
+          File "/home/ieee/ieee25/lib/python3.13/site-packages/lgpio.py", line 1084, in tx_pwm
+TypeError: unsupported operand type(s) for &: 'NoneType' and 'int'
+(ieee25) ieee@raspberrypi:~/ieee-2026/archive $ python3 servo_test.py
+Exception ignored in: <function PWM.__del__ at 0x7fff3df48e00>
+Traceback (most recent call last):
+  File "/home/ieee/ieee25/lib/python3.13/site-packages/RPi/GPIO/__init__.py", line 179, in __del__
+  File "/home/ieee/ieee25/lib/python3.13/site-packages/RPi/GPIO/__init__.py", line 202, in stop
+  File "/home/ieee/ieee25/lib/python3.13/site-packages/lgpio.py", line 1084, in tx_pwmself.motors[0].move(duty, duration)  # front left
+        self.motors[1].move(-duty, duration)  # front right  File "/home/ieee/ieee25/lib/python3.13/site-packages/lgpio.py", line 1084, in tx_pwm
+TypeError: unsupported operand type(s) for &: 'NoneType' and 'int'
+(ieee25) ieee@raspberrypi:~/ieee-2026/archive $ python3 servo_test.py
+Exception ignored in: <function PWM.__del__ at 0x7fff3df48e00>
+Traceback (most recent call last):
+  File "/home/ieee/ieee25/lib/python3.13/site-packages/RPi/GPIO/__init__.py", line 179, in __del__
+  File "/home/ieee/ieee25/lib/python3.13/site-packages/RPi/GPIO/__init__.py", line 202, in stop
+  File "/home/ieee/ieee25/lib/python3.13/site-packages/lgpio.py", line 1084, in tx_pwm  File "/home/ieee/ieee25/lib/python3.13/site-packages/lgpio.py", line 1084, in tx_pwm
+TypeError: unsupported operand type(s) for &: 'NoneType' and 'int'
+(ieee25) ieee@raspberrypi:~/ieee-2026/archive $ python3 servo_test.py
+Exception ignored in: <function PWM.__del__ at 0x7fff3df48e00>
+Traceback (most recent call last):
+  File "/home/ieee/ieee25/lib/python3.13/site-packages/RPi/GPIO/__init__.py", line 179, in __del__
+  File "/home/ieee/ieee25/lib/python3.13/site-packages/RPi/GPIO/__init__.py", line 202, in stop
+  File "/home/ieee/ieee25/lib/python3.13/site-packages/lgpio.py", line 1084, in tx_pwm
         self.motors[2].move(duty, duration)  # back left
         self.motors[3].move(-duty, duration)  # back right
 
