@@ -19,6 +19,8 @@ def set_angle(angle):
     pulse = 500 + (angle / 300.0) * 2000
     set_pulse_width_us(pulse)
 
+set_angle(
+
 
 pwm.stop()
 GPIO.cleanup()

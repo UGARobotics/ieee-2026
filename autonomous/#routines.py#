@@ -20,7 +20,8 @@ def tester_auto_tail(tail):
     # time per inch at speed of 20
 
     """Auto routine that you can change for quick tests."""
-    yield from tail.wag()
+    tail.wag()
+
 
 
 def timed_auto(drivetrain):

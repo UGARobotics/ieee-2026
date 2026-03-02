@@ -27,7 +27,7 @@ class PositionalServo:
 
     def set_angle(self, angle):
         now = time.monotonic()
-        self._end_time = now + 4  # we can adjust this duration as needed, current 4 seconds
+        self._end_time = now + 1.3  # we can adjust this duration as needed, current 1.3 seconds
         self._angle = angle
         
     def publish_angle(self, angle):
