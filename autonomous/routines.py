@@ -3,9 +3,16 @@ import time
 """Contains all of the different autonomous routines/runs over time. """
 
 def tester_auto_intake(intake):
+<<<<<<< Updated upstream
     yield from intake.drop()
     yield from intake.intake(1)
     yield from intake.lift()
+=======
+#    yield from intake.lift()
+    yield from intake.drop()
+    yield from intake.outtake(3)
+    yield from intake.intake(3)
+>>>>>>> Stashed changes
 
 def tester_auto(drivetrain, odometry):
     # time per inch at speed of 20
