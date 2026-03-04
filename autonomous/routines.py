@@ -8,22 +8,12 @@ def tester_auto_intake(intake):
     yield from intake.outtake(3)
     yield from intake.intake(3)
 
-def tester_auto(drivetrain, odometry):
+def tester_auto_odom(drivetrain, odometry):
     # time per inch at speed of 20
 
     """Auto routine that you can change for quick tests."""
-    yield from drivetrain.go_backward(12)
+    yield from drivetrain.turn_left(5.5)
     print(odometry.get_position())
-#    time.sleep(1)
-#    yield from drivetrain.strafe_right(12)
-#    print(odometry.get_position())
-#    time.sleep(1)
-#    yield from drivetrain.go_backward(12)
-#    print(odometry.get_position())
-#    time.sleep(1)
-#    yield from drivetrain.strafe_left(12)
-#    print(odometry.get_position())
-#    time.sleep(1)
 
 def tester_auto_tail(tail):
     # time per inch at speed of 20

@@ -4,7 +4,7 @@ from subsystems.tail import Tail
 from utils.motor import Motor
 from subsystems.drivetrain import Drivetrain
 from subsystems.intake import Intake
-from autonomous.routines import tester_auto_intake
+from autonomous.routines import tester_auto_odom
 
 import time
 
@@ -25,13 +25,12 @@ intake = Intake()
 scheduler = Scheduler(tick_hz=50)
 scheduler.add_subsystem(drivetrain)
 scheduler.add_subsystem(odometry)
-scheduler.add_subsystem(intake)
-#scheduler.add_subsystem(tail)
+#scheduler.add_subsystem(intake)
 
 # run the auto routine
 try:
     # this is going to run until the routine is complete
-    scheduler.run_routine(tester_auto_intake(intake))
+    scheduler.run_routine(tester_auto_odom(drivetrain, odometry))
 
 except KeyboardInterrupt:
     # emergency stop

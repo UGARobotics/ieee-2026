@@ -12,7 +12,7 @@ class Drivetrain:
         self.odometry = odometry
 
     def go_forward(self, distance):
-        _, y = self.odometry.get_position()
+        _, y, _ = self.odometry.get_position()
         target_y = y + distance
 
         self.motors[0].move(15)
@@ -21,7 +21,7 @@ class Drivetrain:
         self.motors[3].move(-15)
 
         while abs(target_y - y) > self.SLIP:
-            _, y = self.odometry.get_position()
+            _, y, _ = self.odometry.get_position()
             print(abs(target_y - y))
             yield        
 
@@ -32,7 +32,7 @@ class Drivetrain:
 
 
     def go_backward(self, distance):
-        _, y = self.odometry.get_position()
+        _, y, _ = self.odometry.get_position()
         target_y = y - distance
 
         self.motors[0].move(-15)
@@ -41,7 +41,7 @@ class Drivetrain:
         self.motors[3].move(15)
 
         while abs(y - target_y) > self.SLIP:
-            _, y = self.odometry.get_position()
+            _, y, _ = self.odometry.get_position()
             print(abs(y-target_y))
             yield        
 
@@ -52,7 +52,7 @@ class Drivetrain:
 
     def strafe_left(self, distance):
         
-        x, _ = self.odometry.get_position()
+        x, _, _ = self.odometry.get_position()
         target_x = x - distance
 
         self.motors[0].move(15)
@@ -61,7 +61,7 @@ class Drivetrain:
         self.motors[3].move(-15)
 
         while abs(x - target_x) > self.SLIP:
-            x, _ = self.odometry.get_position()
+            x, _, _ = self.odometry.get_position()
             print(abs(x - target_x))
             yield
         
@@ -72,7 +72,7 @@ class Drivetrain:
 
     def strafe_right(self, distance):
         
-        x, _ = self.odometry.get_position()
+        x, _, _ = self.odometry.get_position()
         target_x = x + distance
 
         self.motors[0].move(-15)
@@ -81,8 +81,45 @@ class Drivetrain:
         self.motors[3].move(15)
 
         while abs(x - target_x) > self.SLIP:
-            x, _ = self.odometry.get_position()
+            x, _, _ = self.odometry.get_position()
             print(abs(x - target_x))
+            yield
+        
+        self.motors[0].stop()
+        self.motors[1].stop()
+        self.motors[2].stop()
+        self.motors[3].stop()
+
+    def turn_left(self, duration):
+        
+        self.motors[0].move(-5)
+        self.motors[1].move(-5)
+        self.motors[2].move(-5)
+        self.motors[3].move(-5)
+
+        now = time.monotonic()
+        end_time = now + duration
+
+        while time.monotonic() <= end_time:
+            yield
+        
+        self.motors[0].stop()
+        self.motors[1].stop()
+        self.motors[2].stop()
+        self.motors[3].stop()
+
+
+    def turn_right(self, duration):
+        
+        self.motors[0].move(5)
+        self.motors[1].move(5)
+        self.motors[2].move(5)
+        self.motors[3].move(5)
+
+        now = time.monotonic()
+        end_time = now + duration
+
+        while time.monotonic() <= end_time:
             yield
         
         self.motors[0].stop()
@@ -103,3 +140,27 @@ class Drivetrain:
     def update(self):
         for m in self.motors:
             m.update()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
