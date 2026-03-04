@@ -2,6 +2,9 @@ import time
 
 """Contains all of the different autonomous routines/runs over time. """
 
+def tester_auto_intake(intake):
+    yield from intake.drop()
+
 def tester_auto(drivetrain, odometry):
     # time per inch at speed of 20
 
