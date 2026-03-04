@@ -24,7 +24,7 @@ class Motor:
         pid=(0.012, 0.08, 0.0) # Just default constants found by playing with motors with no load. Adjust accordingly.
     ):
         # state machine management
-        self._command_state = None
+        self._command_state = Motor.IDLE
         self._velocity = 0.0
         
         # TODO: Fix - currently, this forcibly sets the PID profile of the motor to 0, but up to 3 can be
