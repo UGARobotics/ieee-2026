@@ -4,6 +4,8 @@ import time
 
 def tester_auto_intake(intake):
     yield from intake.drop()
+    yield from intake.intake(1)
+    yield from intake.lift()
 
 def tester_auto(drivetrain, odometry):
     # time per inch at speed of 20

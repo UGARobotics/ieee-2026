@@ -16,6 +16,7 @@ class ContinuousServo:
 
         self.pin = pin
         self._command_state = None
+        self._velocity = 0.0
         self.state = ContinuousServo.IDLE
     
         GPIO.setmode(GPIO.BCM)

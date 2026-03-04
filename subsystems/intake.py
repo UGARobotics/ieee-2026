@@ -1,12 +1,14 @@
 from utils.continuous_servo import ContinuousServo
+from utils.positional_servo import PositionalServo
+
 import time
 
 class Intake:
     """Subsystem for the intake system"""
-    def __init__(self, pins=[27, 22]):
+    def __init__(self, pins=[12, 16]):
         # TODO: fix pins
         self.main_servo = ContinuousServo(pins[0])
-        self.lift_servo = ContinuousServo(pins[1])
+        self.lift_servo = PositionalServo(pins[1], initial_angle=20, full_rotation_time=2.8)
 
     def intake(self, duration):
         """Start the intake"""
@@ -43,14 +45,14 @@ class Intake:
 
     def lift(self):
         # TODO: fix angle
-        self.lift_servo.set_angle(200)
-        while self.lift_servo.state == ContinuousServo.RUNNING:
+        self.lift_servo.set_angle(20)
+        while self.lift_servo.state == PositionalServo.RUNNING:
             yield
 
     def drop(self):
         # TODO: fix angle
-        self.lift_servo.set_angle(30)
-        while self.lift_servo.state == ContinuousServo.RUNNING:
+        self.lift_servo.set_angle(160)
+        while self.lift_servo.state == PositionalServo.RUNNING:
             yield
 
     def stop(self):

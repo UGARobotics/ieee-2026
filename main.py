@@ -4,7 +4,7 @@ from subsystems.tail import Tail
 from utils.motor import Motor
 from subsystems.drivetrain import Drivetrain
 from subsystems.intake import Intake
-from autonomous.routines import basic_auto, tester_auto, tester_auto_tail
+from autonomous.routines import tester_auto_intake
 
 import time
 
@@ -25,6 +25,7 @@ intake = Intake()
 scheduler = Scheduler(tick_hz=50)
 scheduler.add_subsystem(drivetrain)
 scheduler.add_subsystem(odometry)
+scheduler.add_subsystem(intake)
 #scheduler.add_subsystem(tail)
 
 # run the auto routine
