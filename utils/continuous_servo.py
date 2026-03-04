@@ -16,7 +16,7 @@ class ContinuousServo:
 
         self.pin = pin
         self._command_state = None
-        self._state = ContinuousServo.IDLE
+        self.state = ContinuousServo.IDLE
     
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.pin, GPIO.OUT)
@@ -45,7 +45,7 @@ class ContinuousServo:
     def update(self):
         if self._command_state == ContinuousServo.IDLE:
             self.pwm.ChangeDutyCycle(0)
-            self._state = ContinuousServo.IDLE
+            self.state = ContinuousServo.IDLE
         else:
             self.pwm.ChangeDutyCycle(self._velocity)
-            self._state = ContinuousServo.RUNNING
+            self.state = ContinuousServo.RUNNING

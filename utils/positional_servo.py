@@ -27,7 +27,10 @@ class PositionalServo:
 
     def set_angle(self, angle):
         now = time.monotonic()
-        self._end_time = now + 1.3  # we can adjust this duration as needed, current 1.3 seconds
+
+        # find how long to wait 
+        dist = (abs(self._angle - angle) / 300) * 1.3
+        self._end_time = now + dist  # we can adjust this duration as needed, current 1.3 seconds
         self._angle = angle
         
     def publish_angle(self, angle):
@@ -41,7 +44,7 @@ class PositionalServo:
         GPIO.cleanup(self.pin)
 
     def update(self):
-        if time.monotonic() >= self._end_time:            
+        if time.monotonic() >= self._end_time:
             self.pwm.ChangeDutyCycle(0)  # Stop the servo
             self._state = PositionalServo.IDLE
         else:

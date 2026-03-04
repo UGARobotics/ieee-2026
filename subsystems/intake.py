@@ -1,0 +1,62 @@
+from utils.continuous_servo import ContinuousServo
+import time
+
+class Intake:
+    """Subsystem for the intake system"""
+    def __init__(self, pins=[27, 22]):
+        # TODO: fix pins
+        self.main_servo = ContinuousServo(pins[0])
+        self.lift_servo = ContinuousServo(pins[1])
+
+    def intake(self, duration):
+        """Start the intake"""
+        now = time.monotonic()
+        end_time = now + duration
+        self.main_servo.move(1.0)
+
+        while time.monotonic() < end_time:
+            yield
+
+        self.main_servo.move(0.0)
+    
+    def intake_slow(self, duration):
+        """Start the intake"""
+        now = time.monotonic()
+        end_time = now + duration
+        self.main_servo.move(0.2)
+
+        while time.monotonic() < end_time:
+            yield
+
+        self.main_servo.move(0.0)
+    
+    def outtake(self, duration):
+        """Start the outtake"""
+        now = time.monotonic()
+        end_time = now + duration
+        self.main_servo.move(-1.0)
+
+        while time.monotonic() < end_time:
+            yield
+
+        self.main_servo.move(0.0)
+
+    def lift(self):
+        # TODO: fix angle
+        self.lift_servo.set_angle(200)
+        while self.lift_servo.state == ContinuousServo.RUNNING:
+            yield
+
+    def drop(self):
+        # TODO: fix angle
+        self.lift_servo.set_angle(30)
+        while self.lift_servo.state == ContinuousServo.RUNNING:
+            yield
+
+    def stop(self):
+        self.main_servo.stop()
+        self.lift_servo.stop()
+    
+    def update(self):
+        self.main_servo.update()
+        self.lift_servo.update()
