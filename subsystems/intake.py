@@ -31,6 +31,18 @@ class Intake:
             yield
 
         self.main_servo.move(0.0)
+
+    def intake_while_lift(self, duration):
+        """Start the intake while lifting"""
+        now = time.monotonic()
+        end_time = now + duration
+        self.main_servo.move(0.5)
+        self.lift_servo.set_angle(100)
+
+        while time.monotonic() < end_time:
+            yield
+
+        self.main_servo.move(0.0)
     
     def outtake(self, duration):
         """Start the outtake"""
