@@ -6,7 +6,6 @@ import time
 class Intake:
     """Subsystem for the intake system"""
     def __init__(self, pins=[12, 16]):
-        # TODO: fix pins
         self.main_servo = ContinuousServo(pins[0])
         self.lift_servo = PositionalServo(pins[1], initial_angle=20, full_rotation_time=2.8)
 
