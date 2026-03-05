@@ -55,13 +55,11 @@ class Intake:
         self.main_servo.move(0.0)
 
     def lift(self):
-        # TODO: fix angle
         self.lift_servo.set_angle(20)
         while self.lift_servo.state == PositionalServo.RUNNING:
             yield
 
     def drop(self):
-        # TODO: fix angle
         self.lift_servo.set_angle(160)
         while self.lift_servo.state == PositionalServo.RUNNING:
             yield
