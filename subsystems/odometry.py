@@ -15,6 +15,8 @@ class Odometry:
             bus=bus,
             address=address,
             ticks_per_mm=ticks_per_mm,
+            x_offset=68.031907,
+            y_offset=0.0,
             verbose=False
         )
 
