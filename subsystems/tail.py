@@ -1,8 +1,12 @@
+import time
+
 from utils.continuous_servo import ContinuousServo
 
 class Tail:
     """Subsystem for wagging the tail"""
 
+    TIME_PER_WAG = 3.2
+    
     def __init__(self, pin=14):
         self.servo = ContinuousServo(pin)
 

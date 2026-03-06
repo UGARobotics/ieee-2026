@@ -2,6 +2,9 @@ import time
 
 """Contains all of the different autonomous routines/runs over time. """
 
+def tester_auto_tail(tail):
+    yield from tail.wag(tail.TIME_PER_WAG) # about one full spin
+
 def tester_auto_intake(intake):
 #    yield from intake.lift()
 #    yield from intake.drop()
@@ -20,14 +23,6 @@ def tester_auto_odom(drivetrain, odometry):
     yield from drivetrain.turn_right(3)
     print(odometry.get_position())
     
-    
-
-
-def tester_auto_tail(tail):
-    # time per inch at speed of 20
-
-    """Auto routine that you can change for quick tests."""
-    yield from tail.wag()
 
 
 def timed_auto(drivetrain):
