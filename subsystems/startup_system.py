@@ -1,0 +1,7 @@
+
+class StartupSystem:
+    """Subsystem for the startup system"""
+    def __init__(self, pin=-1):
+        self.pin = pin
+    
+        # when on, we have to wait for light sensor to detect light before we can start the bot. 
