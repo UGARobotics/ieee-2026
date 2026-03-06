@@ -15,8 +15,8 @@ class Odometry:
             bus=bus,
             address=address,
             ticks_per_mm=ticks_per_mm,
-            x_offset=68.031907,
-            y_offset=0.0,
+            x_offset=0.0,
+            y_offset=68.0319070,
             verbose=False
         )
 
@@ -36,9 +36,9 @@ class Odometry:
         if self.odom.verbose:
             print(f"Odometry Position: x={pos.x} mm, y={pos.y} mm")
 
-        self.x = (-pos.y / self.POS_TO_INCH)
-        self.y = (-pos.x / self.POS_TO_INCH)
-        self.h = (-pos.h / self.POS_TO_PI)
+        self.x = pos.x #(-pos.y / self.POS_TO_INCH)
+        self.y = pos.y #(-pos.x / self.POS_TO_INCH)
+        self.h = pos.h #(-pos.h / self.POS_TO_PI)
 
     def reset(self):
         """Reset odometry position to (0,0)"""

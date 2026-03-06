@@ -12,8 +12,17 @@ def tester_auto_odom(drivetrain, odometry):
     # time per inch at speed of 20
 
     """Auto routine that you can change for quick tests."""
-    yield from drivetrain.turn_left(5.5)
+    yield from drivetrain.turn_right(3)
     print(odometry.get_position())
+    yield from drivetrain.turn_left(3)
+    print(odometry.get_position())
+    yield from drivetrain.turn_left(3)
+    print(odometry.get_position())
+    yield from drivetrain.turn_right(3)
+    print(odometry.get_position())
+    
+    
+
 
 def tester_auto_tail(tail):
     # time per inch at speed of 20
