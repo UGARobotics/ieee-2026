@@ -9,11 +9,14 @@ def tester_auto_button_presser(button_presser):
 def tester_auto_tail(tail):
     yield from tail.wag(tail.TIME_PER_WAG) # about one full spin
 
-def tester_auto_intake(intake):
+def tester_auto_intake(drivetrain, intake):
 #    yield from intake.lift()
-    yield from intake.drop()
-    yield from intake.intake(5)
-    yield from intake.lift()
+    yield from drivetrain.go_forward(12)
+    yield from intake.intake_while_drop(5)
+    yield from intake.intake_while_lift(30)
+    yield from drivetrain.turn_left(1)
+    yield from drivetrain.go_forward(12)
+        
 
 def tester_auto_odom(drivetrain, odometry):
     # time per inch at speed of 20

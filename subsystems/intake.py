@@ -13,8 +13,8 @@ class Intake:
         """Start the intake"""
         now = time.monotonic()
         end_time = now + duration
-        self.main_servo.move(1.0)
-
+        self.main_servo.move(-1.0)
+ 
         while time.monotonic() < end_time:
             yield
 
@@ -24,7 +24,7 @@ class Intake:
         """Start the intake"""
         now = time.monotonic()
         end_time = now + duration
-        self.main_servo.move(0.2)
+        self.main_servo.move(-0.2)
 
         while time.monotonic() < end_time:
             yield
@@ -35,8 +35,20 @@ class Intake:
         """Start the intake while lifting"""
         now = time.monotonic()
         end_time = now + duration
-        self.main_servo.move(0.5)
+        self.main_servo.move(-0.5)
         self.lift_servo.set_angle(100)
+
+        while time.monotonic() < end_time:
+            yield
+
+        self.main_servo.move(0.0)
+
+    def intake_while_drop(self, duration):
+        """Start the intake while lifting"""
+        now = time.monotonic()
+        end_time = now + duration
+        self.main_servo.move(-1.0)
+        self.lift_servo.set_angle(150)
 
         while time.monotonic() < end_time:
             yield
@@ -47,7 +59,7 @@ class Intake:
         """Start the outtake"""
         now = time.monotonic()
         end_time = now + duration
-        self.main_servo.move(-1.0)
+        self.main_servo.move(1.0)
 
         while time.monotonic() < end_time:
             yield
@@ -60,7 +72,7 @@ class Intake:
             yield
 
     def drop(self):
-        self.lift_servo.set_angle(160)
+        self.lift_servo.set_angle(150)
         while self.lift_servo.state == PositionalServo.RUNNING:
             yield
 
