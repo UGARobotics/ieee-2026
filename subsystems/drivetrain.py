@@ -5,6 +5,7 @@ from subsystems.odometry import Odometry
 
 class Drivetrain:
     SLIP            = 0.1              # Adjust value for testing
+    TIME_PER_PI     = 4.12
 
     def __init__(self, motors: list[Motor], odometry: Odometry = None):
         # in order of front left, front right, back left, back right
@@ -90,12 +91,14 @@ class Drivetrain:
         self.motors[2].stop()
         self.motors[3].stop()
 
-    def turn_left(self, duration):
+    def turn_left(self, rotation):
+
+        duration = rotation * self.TIME_PER_PI
         
-        self.motors[0].move(-5)
-        self.motors[1].move(-5)
-        self.motors[2].move(-5)
-        self.motors[3].move(-5)
+        self.motors[0].move(-15)
+        self.motors[1].move(-15)
+        self.motors[2].move(-15)
+        self.motors[3].move(-15)
 
         now = time.monotonic()
         end_time = now + duration
@@ -109,12 +112,14 @@ class Drivetrain:
         self.motors[3].stop()
 
 
-    def turn_right(self, duration):
+    def turn_right(self, rotation):
         
-        self.motors[0].move(5)
-        self.motors[1].move(5)
-        self.motors[2].move(5)
-        self.motors[3].move(5)
+        duration = rotation * self.TIME_PER_PI
+        
+        self.motors[0].move(15)
+        self.motors[1].move(15)
+        self.motors[2].move(15)
+        self.motors[3].move(15)
 
         now = time.monotonic()
         end_time = now + duration

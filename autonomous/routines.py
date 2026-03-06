@@ -20,13 +20,7 @@ def tester_auto_odom(drivetrain, odometry):
 
     """Auto routine that you can change for quick tests."""
     
-    yield from drivetrain.go_forward(12)
-    print(odometry.get_position())
-    yield from drivetrain.strafe_left(12)
-    print(odometry.get_position())
-    yield from drivetrain.go_backward(12)
-    print(odometry.get_position())
-    yield from drivetrain.strafe_right(12)
+    yield from drivetrain.turn_left(1)
     print(odometry.get_position())
 
     
