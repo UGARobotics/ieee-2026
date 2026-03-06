@@ -5,7 +5,7 @@ from subsystems.odometry import Odometry
 
 class Drivetrain:
     SLIP            = 0.1              # Adjust value for testing
-    TIME_PER_PI     = 4.12
+    TIME_PER_PI     = 4.11
 
     def __init__(self, motors: list[Motor], odometry: Odometry = None):
         # in order of front left, front right, back left, back right
