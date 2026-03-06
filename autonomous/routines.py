@@ -2,6 +2,10 @@ import time
 
 """Contains all of the different autonomous routines/runs over time. """
 
+def tester_auto_button_presser(button_presser):
+    yield from button_presser.press()
+    yield from button_presser.unpress()
+
 def tester_auto_tail(tail):
     yield from tail.wag(tail.TIME_PER_WAG) # about one full spin
 
