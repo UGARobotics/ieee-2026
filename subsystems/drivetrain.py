@@ -4,7 +4,7 @@ from utils.motor import Motor
 from subsystems.odometry import Odometry
 
 class Drivetrain:
-    SLIP            = 0.12              # Adjust value for testing
+    SLIP            = 0.1              # Adjust value for testing
 
     def __init__(self, motors: list[Motor], odometry: Odometry = None):
         # in order of front left, front right, back left, back right

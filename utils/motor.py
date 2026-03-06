@@ -105,6 +105,12 @@ class Motor:
     def stop(self):
         self._set_command_velocity(0.0)
         self._set_command_state(Motor.IDLE)
+        self.motor.set_control(DifferentialVelocityDutyCycle(
+            target_velocity=0.0,
+            differential_slot=self.differential_slot,
+            differential_position=self.differential_position
+        ))
+
         
     def update(self):
         if self._command_state == Motor.IDLE:
