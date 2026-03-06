@@ -4,7 +4,7 @@ import time
 
 def tester_auto_intake(intake):
 #    yield from intake.lift()
-    yield from intake.drop()
+#    yield from intake.drop()
     yield from intake.intake(10)
 
 def tester_auto_odom(drivetrain, odometry):

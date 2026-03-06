@@ -1,29 +1,34 @@
-from utils.positional_servo import PositionalServo
+from utils.continuous_servo import ContinuousServo
 
 class Tail:
     """Subsystem for wagging the tail"""
 
-    def __init__(self, pin=17):
-        self.servo = PositionalServo(pin)
-        self.queue = []
+    def __init__(self, pin=14):
+        self.servo = ContinuousServo(pin)
 
-    def wag(self):
+    def wag(self, duration):
         """Wag the tail"""
-        self.queue.append(30)
-        self.queue.append(210)
-        self.queue.append(30)
-        self.queue.append(210)
+        now = time.monotonic()
+        end_time = now + duration
+        self.servo.move(1.0)
 
-        while len(self.queue) != 0 or self.servo._state == PositionalServo.RUNNING:
+        while time.monotonic() < end_time:
             yield
 
+        self.servo.move(0.0)
+
+    def backwag(self, duration):
+        """Backwag the tail"""
+        now = time.monotonic()
+        end_time = now + duration
+        self.servo.move(-1.0)
+
+        while time.monotonic() < end_time:
+            yield
+
+        self.servo.move(0.0)
 
     def update(self):
-        """Called every scheduler tick to update the servo position"""
-        if self.servo._state == PositionalServo.IDLE and self.queue:
-            next_angle = self.queue.pop(0)
-            self.servo.set_angle(next_angle)
-        
         self.servo.update()
 
     def stop(self):
