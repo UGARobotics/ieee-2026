@@ -20,10 +20,10 @@ time.sleep(3)
 
 # initialize subsystems
 odometry = Odometry()
-drivetrain = Drivetrain([front_left, front_right, back_left, back_right], odometry=odometry)
 intake = Intake()
 tail = Tail()
 button_presser = ButtonPresser()
+drivetrain = Drivetrain([front_left, front_right, back_left, back_right], odometry=odometry)
 
 startup_system = StartupSystem(pin=-1)
 
