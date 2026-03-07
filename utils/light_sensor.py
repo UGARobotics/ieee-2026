@@ -16,7 +16,6 @@ class LightSensor:
         self.pin = pin
         self.state = None
 
-    
     def stop(self):
       pass
 
