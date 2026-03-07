@@ -4,40 +4,40 @@ import time
 from utils.light_sensor import LightSensor
 
 
-IDLE = 1 # will start off as IDLE
+IDLE = 0 # will start off as IDLE
+WAITING = 1 # IDLE -> WAITING when gpio input detected
 RUNNING = 2 # when light is detected
-WAITING = 3 # IDLE -> WAITING when gpio input detected
 
 class StartupSystem:
     """Subsystem for the startup system"""
-    def __init__(self, pin=-1): # dummy pin num rn
+    def __init__(self, pin=-1):
+        # TODO: adjust pin number
         self.pin = pin
-        self._command_state = StartupSystem.IDLE # starts as IDLE
+        self.state = StartupSystem.IDLE # starts as IDLE
 
         GPIO.setmode(GPIO.BCM) # GPIO num instead of actual pin num
         GPIO.setup(self.pin, GPIO.IN) # waiting for input
         
-        self.light_sensor = LightSensor(pin)    
-
-    def _set_command_set(self, state):
-        self._set_command_state = state
+        # TODO: initialize light sensor here when we have it set up
+        # self.light_sensor = LightSensor(pin)    
 
     def _is_high(self) -> bool:
-        if GPIO.HIGH == 1 and self._set_command_state == StartupSystem.IDLE:
+        if GPIO.HIGH == 1:
             return True
         else:
             return False
 
     def update(self):
-        if self._is_high(): # is high + idle -> waiting
-            self._command_state = StartupSystem.WAITING
-
-        elif self._command_state == StartupSystem.WAITING:
+        if self.state == StartupSystem.IDLE and self._is_high(): # is high + idle -> waiting
+            self.state = StartupSystem.WAITING
+        elif self.state == StartupSystem.WAITING:
             pass
-            # needs to check for status of light here
+            # TODO: needs to check for status of light here
             # self.light_sensor.update()
             # if light_sensor detects light: WAITING -> RUNNING
+        else:
+            pass
+            # Either not looking for light or already running, so do nothing
 
     def stop(self):
-        self._set_command_state(StartupSystem.IDLE) # idk
         GPIO.cleanup(self.pin)
