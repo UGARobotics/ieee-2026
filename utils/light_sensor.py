@@ -22,4 +22,4 @@ class LightSensor:
 
     
     def update(self): 
-        pass        
+        pass

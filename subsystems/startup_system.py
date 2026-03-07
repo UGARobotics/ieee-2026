@@ -19,7 +19,7 @@ class StartupSystem:
         GPIO.setup(self.pin, GPIO.IN) # waiting for input
         
         # TODO: initialize light sensor here when we have it set up
-        # self.light_sensor = LightSensor(pin)    
+        self.light_sensor = LightSensor(pin)    
 
     def _is_high(self) -> bool:
         if GPIO.HIGH == 1:
