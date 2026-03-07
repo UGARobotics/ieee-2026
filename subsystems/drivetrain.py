@@ -1,81 +1,136 @@
 import time
 
 from utils.motor import Motor
+from subsystems.odometry import Odometry
 
 class Drivetrain:
-    
-    TIME_PER_INCH   = 0.158333333     # Adjust value for testing
-    TIME_PER_PI     = 4.2             # Adjust value for testing
+    SLIP            = 0.1              # Adjust value for testing
+    TIME_PER_PI     = 4.11             # Time in seconds
 
-    def __init__(self, motors: list[Motor]):
+    def __init__(self, motors: list[Motor], odometry: Odometry = None):
         # in order of front left, front right, back left, back right
         self.motors = motors
+        self.odometry = odometry
 
-    def go_forward(self, duty, distance):
-        duration = distance * self.TIME_PER_INCH
-        self.motors[0].move(duty, duration)  # front left
-        self.motors[1].move(-duty, duration)  # front right
-        self.motors[2].move(duty, duration)  # back left
-        self.motors[3].move(-duty, duration)  # back right
+    def go_forward(self, distance):
+        _, y, _ = self.odometry.get_position()
+        target_y = y + distance
 
-        end_time = time.monotonic() + duration
-        while time.monotonic() < end_time:
-            yield
+        self.motors[0].move(15)
+        self.motors[1].move(-15)
+        self.motors[2].move(15)
+        self.motors[3].move(-15)
 
-    def go_backward(self, duty, distance):
-        duration = distance * self.TIME_PER_INCH
-        self.motors[0].move(-duty, duration)  # front left
-        self.motors[1].move(duty, duration)  # front right
-        self.motors[2].move(-duty, duration)  # back left
-        self.motors[3].move(duty, duration)  # back right
+        while abs(target_y - y) > self.SLIP:
+            _, y, _ = self.odometry.get_position()
+            print(abs(target_y - y))
+            yield        
 
-        end_time = time.monotonic() + duration
-        while time.monotonic() < end_time:
-            yield
+        self.motors[0].stop()
+        self.motors[1].stop()
+        self.motors[2].stop()
+        self.motors[3].stop()
 
-    def turn_left(self, duty, distance):
-        duration = distance * self.TIME_PER_PI
-        self.motors[0].move(duty, duration)  # front left
-        self.motors[1].move(duty, duration)  # front right
-        self.motors[2].move(duty, duration)  # back left
-        self.motors[3].move(duty, duration)  # back right
+
+    def go_backward(self, distance):
+        _, y, _ = self.odometry.get_position()
+        target_y = y - distance
+
+        self.motors[0].move(-15)
+        self.motors[1].move(15)
+        self.motors[2].move(-15)
+        self.motors[3].move(15)
+
+        while abs(y - target_y) > self.SLIP:
+            _, y, _ = self.odometry.get_position()
+            print(abs(y-target_y))
+            yield        
+
+        self.motors[0].stop()
+        self.motors[1].stop()
+        self.motors[2].stop()
+        self.motors[3].stop()
+
+    def strafe_left(self, distance):
         
-        end_time = time.monotonic() + duration
-        while time.monotonic() < end_time:
-            yield
+        x, _, _ = self.odometry.get_position()
+        target_x = x - distance
 
-    def turn_right(self, duty, distance):
-        duration = distance * self.TIME_PER_PI
-        self.motors[0].move(-duty, duration)  # front left
-        self.motors[1].move(-duty, duration)  # front right
-        self.motors[2].move(-duty, duration)  # back left
-        self.motors[3].move(-duty, duration)  # back right
-        
-        end_time = time.monotonic() + duration
-        while time.monotonic() < end_time:
-            yield
+        self.motors[0].move(15)
+        self.motors[1].move(15)
+        self.motors[2].move(-15)
+        self.motors[3].move(-15)
 
-    def strafe_left(self, duty, distance):
-        duration = distance * self.TIME_PER_INCH
-        self.motors[0].move(duty, duration)  # front left
-        self.motors[1].move(duty, duration)  # front right
-        self.motors[2].move(-duty, duration)  # back left
-        self.motors[3].move(-duty, duration)  # back right
-        
-        end_time = time.monotonic() + duration
-        while time.monotonic() < end_time:
+        while abs(x - target_x) > self.SLIP:
+            x, _, _ = self.odometry.get_position()
+            print(abs(x - target_x))
             yield
+        
+        self.motors[0].stop()
+        self.motors[1].stop()
+        self.motors[2].stop()
+        self.motors[3].stop()
 
-    def strafe_right(self, duty, distance):
-        duration = distance * self.TIME_PER_INCH
-        self.motors[0].move(-duty, duration)  # front left
-        self.motors[1].move(-duty, duration)  # front right
-        self.motors[2].move(duty, duration)  # back left
-        self.motors[3].move(duty, duration)  # back right
+    def strafe_right(self, distance):
         
-        end_time = time.monotonic() + duration
-        while time.monotonic() < end_time:
+        x, _, _ = self.odometry.get_position()
+        target_x = x + distance
+
+        self.motors[0].move(-15)
+        self.motors[1].move(-15)
+        self.motors[2].move(15)
+        self.motors[3].move(15)
+
+        while abs(x - target_x) > self.SLIP:
+            x, _, _ = self.odometry.get_position()
+            print(abs(x - target_x))
             yield
+        
+        self.motors[0].stop()
+        self.motors[1].stop()
+        self.motors[2].stop()
+        self.motors[3].stop()
+
+    def turn_left(self, rotation):
+
+        duration = rotation * self.TIME_PER_PI
+        
+        self.motors[0].move(-15)
+        self.motors[1].move(-15)
+        self.motors[2].move(-15)
+        self.motors[3].move(-15)
+
+        now = time.monotonic()
+        end_time = now + duration
+
+        while time.monotonic() <= end_time:
+            yield
+        
+        self.motors[0].stop()
+        self.motors[1].stop()
+        self.motors[2].stop()
+        self.motors[3].stop()
+
+
+    def turn_right(self, rotation):
+        
+        duration = rotation * self.TIME_PER_PI
+        
+        self.motors[0].move(15)
+        self.motors[1].move(15)
+        self.motors[2].move(15)
+        self.motors[3].move(15)
+
+        now = time.monotonic()
+        end_time = now + duration
+
+        while time.monotonic() <= end_time:
+            yield
+        
+        self.motors[0].stop()
+        self.motors[1].stop()
+        self.motors[2].stop()
+        self.motors[3].stop()
 
     def check_all_faults(self):
         self.motors[0].check_faults()
@@ -90,3 +145,27 @@ class Drivetrain:
     def update(self):
         for m in self.motors:
             m.update()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

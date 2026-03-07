@@ -2,7 +2,7 @@ import time
 from phoenix6.unmanaged import feed_enable
 
 class Scheduler:
-    def __init__(self, tick_hz=50):
+    def __init__(self, tick_hz=100):
         """Scheduler to manage all subsystems uniformly."""
         self.subsystems = []
         self.dt = 1.0 / tick_hz

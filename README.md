@@ -59,3 +59,6 @@ The system is designed to run all motors and subsystems at a fixed tick rate (e.
 ## Installation for Pi
 
 TODO
+Python version 3.13.5
+pip version 25.1.1
+

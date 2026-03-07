@@ -1,8 +1,11 @@
 from scheduler.scheduler import Scheduler
-from subsystems.odometry import Odometry
 from utils.motor import Motor
+from subsystems.odometry import Odometry
+from subsystems.tail import Tail
 from subsystems.drivetrain import Drivetrain
-from autonomous.routines import basic_auto, tester_auto
+from subsystems.intake import Intake
+from subsystems.button_presser import ButtonPresser
+from autonomous.routines import tester_auto_intake
 
 import time
 
@@ -16,17 +19,23 @@ time.sleep(3)
 
 # initialize subsystems
 odometry = Odometry()
-drivetrain = Drivetrain([front_left, front_right, back_left, back_right])
+drivetrain = Drivetrain([front_left, front_right, back_left, back_right], odometry=odometry)
+intake = Intake()
+tail = Tail()
+button_presser = ButtonPresser()
+
 
 scheduler = Scheduler(tick_hz=50)
 scheduler.add_subsystem(drivetrain)
 scheduler.add_subsystem(odometry)
-# scheduler.add_subsystem(servo_system)
+scheduler.add_subsystem(intake)
+#scheduler.add_subsystem(tail)
+#scheduler.add_subsystem(button_presser)
 
 # run the auto routine
 try:
     # this is going to run until the routine is complete
-    scheduler.run_routine(tester_auto(drivetrain, odometry))
+    scheduler.run_routine(tester_auto_intake(drivetrain, intake))
 
 except KeyboardInterrupt:
     # emergency stop

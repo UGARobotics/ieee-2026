@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 
-PIN = 17
+PIN = 16
 FREQ = 50  # 50Hz servo frequency
 
 GPIO.setmode(GPIO.BCM)
@@ -20,10 +20,10 @@ def set_angle(angle):
     set_pulse_width_us(pulse)
 
 
-for angle in range(0, 300, 10):
-    set_angle(angle)
+for i in range(20, 200, 2):
+    set_angle(i)
+    print(i)
     time.sleep(0.5)
 
-    
 pwm.stop()
 GPIO.cleanup()

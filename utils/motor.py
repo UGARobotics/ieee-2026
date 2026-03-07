@@ -24,8 +24,7 @@ class Motor:
         pid=(0.012, 0.08, 0.0) # Just default constants found by playing with motors with no load. Adjust accordingly.
     ):
         # state machine management
-        self._state = Motor.IDLE
-        self._end_time = 0.0
+        self._command_state = Motor.IDLE
         self._velocity = 0.0
         
         # TODO: Fix - currently, this forcibly sets the PID profile of the motor to 0, but up to 3 can be
@@ -82,25 +81,6 @@ class Motor:
         # yay
         print(f"Motor {self.id} live!")
 
-    def move(
-        self,
-        velocity=0.0,
-        duration=1.0
-    ):
-
-        now = time.monotonic()
-        
-        # set the state machine, with the rest handled in the controller
-        self._velocity = velocity
-        self._end_time = now + duration
-        self._state = Motor.RUNNING
-
-        self.motor.set_control(DifferentialVelocityDutyCycle(
-            target_velocity=self._velocity, 
-            differential_slot=self.differential_slot, 
-            differential_position=self.differential_position
-        ))
-
     def check_faults(self):
         # there are other faults. but i gotta write them all out one by one and im a bit lazy. ill do it later
         print("-----")
@@ -111,29 +91,35 @@ class Motor:
         print("Sticky stator fault:", self.motor.get_sticky_fault_bridge_brownout())
         print("-----")
 
+    def _set_command_state(self, state):
+        self._command_state = state
+
+    def _set_command_velocity(self, velocity):
+        self._velocity = velocity
+
+    def move(self, velocity):
+        # set the state machine, with the rest handled in the controller
+        self._set_command_velocity(velocity)
+        self._set_command_state(Motor.RUNNING)
+
     def stop(self):
-        self._state = Motor.IDLE
-        self._velocity = 0.0
-        self._end_time = 0.0
+        self._set_command_velocity(0.0)
+        self._set_command_state(Motor.IDLE)
         self.motor.set_control(DifferentialVelocityDutyCycle(
-            target_velocity=0.0, 
-            differential_slot=self.differential_slot, 
+            target_velocity=0.0,
+            differential_slot=self.differential_slot,
             differential_position=self.differential_position
         ))
+
         
     def update(self):
-        if self._state == Motor.IDLE:
-            return
-
-        if time.monotonic() >= self._end_time:
+        if self._command_state == Motor.IDLE:
             self.motor.set_control(DifferentialVelocityDutyCycle(
-                target_velocity=0.0, 
+                target_velocity=0.0,
                 differential_slot=self.differential_slot,
                 differential_position=self.differential_position
             ))
-            self._state = Motor.IDLE
-            self._velocity = 0.0
-            self._end_time = 0.0
+
         else:
             self.motor.set_control(DifferentialVelocityDutyCycle(
                 target_velocity=self._velocity,

@@ -4,35 +4,41 @@ from utils.odom_handler import PinpointI2C
 class Odometry:
     """Subsystem for odometry tracking using PinpointI2C"""
 
-    TICKS_PER_MM = 19.894   # Adjust if needed
-    ADDRESS = 0x31          # Default I2C address for PinpointI2C
-    BUS = 1                 # Default I2C bus number
-    POS_TO_INCH = 22.08333  # Position to inch
+    TICKS_PER_MM = 19.894      # Adjust if needed
+    ADDRESS      = 0x31        # Default I2C address for PinpointI2C
+    BUS          = 1           # Default I2C bus number
+    POS_TO_INCH  = 24.34       # Position to inch
+    POS_TO_PI    = 0.0000001   # Position to pi
 
     def __init__(self, bus: int = BUS, address: int = ADDRESS, ticks_per_mm: float = TICKS_PER_MM):
         self.odom = PinpointI2C(
             bus=bus,
             address=address,
             ticks_per_mm=ticks_per_mm,
+            x_offset=0.0,
+            y_offset=68.0319070,
             verbose=False
         )
+
+        self.odom.__enter__()
         
         self.x = 0.0
         self.y = 0.0
+        self.h = 0.0
 
-    def get_position(self) -> tuple[float, float]:
+    def get_position(self) -> tuple[float, float, float]:
         """Returns the current (x, y) position in mm"""
-        return (self.x, self.y)
+        return (self.x, self.y, self.h)
 
     def update(self):
         """Called every scheduler tick"""
-        with self.odom as pp:
-            pos = pp.read_pose()
-            if self.odom.verbose:
-                print(f"Odometry Position: x={pos.x} mm, y={pos.y} mm")
+        pos = self.odom.read_pose()
+        if self.odom.verbose:
+            print(f"Odometry Position: x={pos.x} mm, y={pos.y} mm")
 
-            self.x += (pos.x / self.POS_TO_INCH)
-            self.y += (pos.y / self.POS_TO_INCH)
+        self.x = (-pos.y / self.POS_TO_INCH)
+        self.y = (-pos.x / self.POS_TO_INCH)
+        self.h = (-pos.h / self.POS_TO_PI)
 
     def reset(self):
         """Reset odometry position to (0,0)"""
