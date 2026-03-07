@@ -1,6 +1,14 @@
 import time
 
+from subsystems.startup_system import StartupSystem
+ 
 """Contains all of the different autonomous routines/runs over time. """
+
+def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, startup_system):
+    while startup_system.state == StartupSystem.IDLE:
+        yield
+
+    yield from drivetrain.go_forward(12)
 
 def tester_auto_button_presser(button_presser):
     yield from button_presser.press()
@@ -25,8 +33,6 @@ def tester_auto_odom(drivetrain, odometry):
     
     yield from drivetrain.turn_left(1)
     print(odometry.get_position())
-
-    
 
 
 def timed_auto(drivetrain):
