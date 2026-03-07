@@ -5,6 +5,8 @@ from subsystems.startup_system import StartupSystem
 """Contains all of the different autonomous routines/runs over time. """
 
 def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, startup_system):
+
+    # Maybe go if stuck in WAITING for too long 
     while startup_system.state == StartupSystem.IDLE:
         yield
 

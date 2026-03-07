@@ -121,4 +121,4 @@ The main entry point is `main.py`, which initializes motors, subsystems, and run
 - motor.py: Fix PID profile setting - currently forcibly sets to 0, but up to 3 can be saved (line 30)
 - motor.py: Setting PID configs, see above TODO (line 71)
 - routines.py: WE GO FULL ROTATION 2PI + PI/2 (lines 299, 605)
-
+- routines.py: Maybe add a timeout to the WAITING state in the startup routine (line 299)
