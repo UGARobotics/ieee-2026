@@ -81,14 +81,21 @@ class Drone:
         if not self.cap.isOpened():
             raise RuntimeError("Could not open /dev/video0 — check capture card is connected")
 
-        for _ in range(5):
-            self.cap.read()
+        #for _ in range(5):
 
-        ret, frame = self.cap.read()
-        self.cap.release()
+        ret, frame = self.cap.read()        
 
-        cv2.imwrite(output_path, frame)
+
+        # set color states
+        # state = COLOR.BLUE
+        # confirmation = CONFIRMED
+        # if past 20 frames has blue, then confirmed blue
+        
+        #cv2.imwrite(output_path, frame)
         print(f"Saved {output_path}")
+
+    def stop():
+        self.cap.release()
 
     '''
     IR COMMANDS
