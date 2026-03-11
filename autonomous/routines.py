@@ -5,13 +5,39 @@ from subsystems.startup_system import StartupSystem
 """Contains all of the different autonomous routines/runs over time. """
 
 def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, startup_system):
+    pass
+
+
+def all_subsystems_test(drivetrain, odometry, intake, tail, button_presser, startup_system):
 
     # Maybe go if stuck in WAITING for too long 
     while startup_system.state == StartupSystem.IDLE:
         yield
 
     time.sleep(1)
+    """
     yield from drivetrain.go_forward(12)
+    print(odometry.get_position())
+    time.sleep(1)
+    yield from button_presser.press()
+    yield from button_presser.unpress()
+    yield from button_presser.press()
+    yield from button_presser.unpress()
+    time.sleep(1)
+    """
+    yield from intake.intake_while_drop(5)
+    yield from intake.intake_while_lift(5)
+    time.sleep(1)
+    yield from drivetrain.go_forward(12, holding=True)
+    print(odometry.get_position())
+
+    """
+    time.sleep(1)
+    yield from intake.lift()
+    time.sleep(1)
+    yield from tail.wag(tail.TIME_PER_WAG)
+    """
+    
 
 def tester_auto_button_presser(button_presser):
     yield from button_presser.unpress()

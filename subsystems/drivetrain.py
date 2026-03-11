@@ -33,10 +33,14 @@ class Drivetrain:
             print(abs(target_y - y))
             yield        
 
+        if holding:
+            self.intake.main_servo.move(0)
+
         self.motors[0].stop()
         self.motors[1].stop()
         self.motors[2].stop()
         self.motors[3].stop()
+
 
 
     def go_backward(self, distance, holding=False):
@@ -57,6 +61,9 @@ class Drivetrain:
             _, y, _ = self.odometry.get_position()
             print(abs(y-target_y))
             yield
+
+        if holding:
+            self.intake.main_servo.move(0)
 
         self.motors[0].stop()
         self.motors[1].stop()
@@ -80,7 +87,10 @@ class Drivetrain:
             x, _, _ = self.odometry.get_position()
             print(abs(x - target_x))
             yield
-        
+
+        if holding:
+            self.intake.main_servo.move(0)
+                    
         self.motors[0].stop()
         self.motors[1].stop()
         self.motors[2].stop()
@@ -103,7 +113,10 @@ class Drivetrain:
             x, _, _ = self.odometry.get_position()
             print(abs(x - target_x))
             yield
-        
+
+        if holding:
+            self.intake.main_servo.move(0)
+
         self.motors[0].stop()
         self.motors[1].stop()
         self.motors[2].stop()
@@ -127,6 +140,9 @@ class Drivetrain:
 
         while time.monotonic() <= end_time:
             yield
+
+        if holding:
+            self.intake.main_servo.move(0)
         
         self.motors[0].stop()
         self.motors[1].stop()
@@ -152,6 +168,9 @@ class Drivetrain:
 
         while time.monotonic() <= end_time:
             yield
+            
+        if holding:
+            self.intake.main_servo.move(0)
         
         self.motors[0].stop()
         self.motors[1].stop()
