@@ -10,9 +10,15 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
     while startup_system.state == StartupSystem.IDLE:
         yield
 
+    time.sleep(1)
     yield from drivetrain.go_forward(12)
 
 def tester_auto_button_presser(button_presser):
+    yield from button_presser.unpress()
+    yield from button_presser.press()
+    yield from button_presser.unpress()
+    yield from button_presser.press()
+    yield from button_presser.unpress()
     yield from button_presser.press()
     yield from button_presser.unpress()
 
