@@ -1,6 +1,6 @@
 from smbus2 import SMBus
 from collections import deque
-
+ 
 class LightSensor:
     """Light sensor handler for I2C controlled light sensors with support for dual sensors"""
     
