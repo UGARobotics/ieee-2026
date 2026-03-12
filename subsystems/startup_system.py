@@ -10,6 +10,8 @@ class StartupSystem:
     WAITING = 1 # IDLE -> WAITING when gpio input detected
     RUNNING = 2 # when light is detected
 
+class StartupSystem:
+    """Subsystem for the startup system"""
     def __init__(self, pin=21):
         self.pin = pin
         self.state = StartupSystem.IDLE # starts as IDLE
@@ -17,29 +19,26 @@ class StartupSystem:
         GPIO.setmode(GPIO.BCM) # GPIO num instead of actual pin num
         GPIO.setup(self.pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # waiting for input
         
-        # TODO: initialize light sensor here when we have it set up
-        self.light_sensor = LightSensor(pin)    
+        # Initialize I2C light sensor (primary address by default)
+        self.light_sensor = LightSensor(use_secondary=False)    
 
     def _is_high(self) -> bool:
         pin_state = GPIO.input(self.pin)
 
-        if pin_state == GPIO.HIGH:
-            return True
-        else:
-            return False
+        return pin_state == GPIO.HIGH
 
     def update(self):
         if self.state == StartupSystem.IDLE and self._is_high(): # is high + idle -> waiting
             self.state = StartupSystem.WAITING
         elif self.state == StartupSystem.WAITING:
-            # pass
-            # TODO: needs to check for status of light here
-            # self.light_sensor.update()
-            # if light_sensor detects light: WAITING -> RUNNING
-            self.state = StartupSystem.RUNNING
+            # Check status of light sensor
+            
+            if self.light_sensor.state == LightSensor.DETECTED:
+                self.state = StartupSystem.RUNNING
         else:
-            pass
             # Either not looking for light or already running, so do nothing
+            pass
 
     def stop(self):
         GPIO.cleanup(self.pin)
+        self.light_sensor.stop()

@@ -1,24 +1,97 @@
-import RPi.GPIO as GPIO
-import time
-
-DETECTED = 0 # light detected
-UNDETECTED = 1 # no light detected
+from smbus2 import SMBus
+from collections import deque
 
 class LightSensor:
-    """
-    Subsystem for light sensor - wip since not hooked up
-    """
-    def __init__(
-            self, 
-            pin,
-    ):
-        
-        self.pin = pin
-        self.state = None
-
-    def stop(self):
-      pass
-
+    """Light sensor handler for I2C controlled light sensors with support for dual sensors"""
     
-    def update(self): 
-        pass
+    UNDETECTED = 0  # no light detected
+    DETECTED = 1    # light detected
+    
+    # TODO: update with necessary registers based on light sensor
+    REG_CONTROL = 0x00
+    REG_DATA_LOW = 0x0D
+    REG_DATA_HIGH = 0x0E
+    
+    # TODO: adjust based on light sensitivity
+    LIGHT_DETECTION_THRESHOLD = 100
+    
+    def __init__(
+        self,
+        bus: int = 1,
+        address_primary: int = 0x29,
+        address_secondary: int = 0x39,
+        use_secondary: bool = False,
+        window_size: int = 5
+    ):
+        """ Initialize light sensor """
+        self.bus_num = bus
+        self.address_primary = address_primary
+        self.address_secondary = address_secondary
+        self.address = address_secondary if use_secondary else address_primary
+        self._bus = None
+        
+        self.state = self.UNDETECTED
+        self.last_light_level = 0
+        
+        self.window_size = window_size
+        self.readings_window = deque(maxlen=window_size)
+        self.window_sum = 0
+        self.averaged_light_level = 0
+        
+        # open bus
+        self._bus = SMBus(self.bus_num)
+        
+    def switch_to_primary(self):
+        """Switch to the primary sensor"""
+        self.address = self.address_primary
+    
+    def switch_to_secondary(self):
+        """Switch to the secondary sensor"""
+        self.address = self.address_secondary
+    
+    def _read_light_level(self) -> int:
+        """ Read raw light level from sensor """
+        if not self._bus:
+            raise RuntimeError("I2C bus not open")
+
+        # TODO: Replace with actual sensor read commands
+        # This is a placeholder - the actual implementation depends on your sensor
+        # Example for a typical sensor:
+        # data = self._bus.read_i2c_block_data(self.address, self.REG_DATA_LOW, 2)
+        # light_level = (data[1] << 8) | data[0]
+        
+        light_level = 0  # Placeholder
+        return light_level
+    
+    def _update_sliding_window(self, new_reading: int):
+        """ Sliding window helps filter the noise from false readings """
+        # If window is full, subtract the value that will be removed
+        if len(self.readings_window) == self.window_size:
+            self.window_sum -= self.readings_window[0]
+        
+        # Add new reading
+        self.readings_window.append(new_reading)
+        self.window_sum += new_reading
+        
+        # Calculate average
+        self.averaged_light_level = self.window_sum // len(self.readings_window)
+    
+    def update(self):
+        """ Called every scheduler tick - reads light sensor, updates sliding window, and updates state """
+        # TODO: Implement actual light detection logic here
+        # Read raw sensor value
+        self.last_light_level = self._read_light_level()
+        
+        # Update sliding window average
+        self._update_sliding_window(self.last_light_level)
+        
+        # Determine state based on averaged value (filters noise)
+        if self.averaged_light_level > self.LIGHT_DETECTION_THRESHOLD:
+            self.state = self.DETECTED
+        else:
+            self.state = self.UNDETECTED
+    
+    def stop(self):
+        """Stop the light sensor subsystem"""
+        if self._bus:
+            self._bus.close()
