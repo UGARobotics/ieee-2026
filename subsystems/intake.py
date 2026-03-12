@@ -1,13 +1,35 @@
+from phoenix6.hardware.canrange import CANrange
+
 from utils.continuous_servo import ContinuousServo
 from utils.positional_servo import PositionalServo
+from collections import deque
 
 import time
 
 class Intake:
     """Subsystem for the intake system"""
-    def __init__(self, pins=[12, 16]):
+
+    NOT_DETECTED_DUCK = 0
+    DETECTED_DUCK = 1
+    
+    def __init__(
+            self,
+            pins=[12, 16],
+            canivore="Main",
+            tof_window_size: int = 5
+    ):
         self.main_servo = ContinuousServo(pins[0])
         self.lift_servo = PositionalServo(pins[1], initial_angle=20, full_rotation_time=2.8)
+        self.tof = CANrange(0, canivore)
+
+        self.duck_state = Intake.NOT_DETECTED_DUCK
+        
+        # Sliding window for TOF distance averaging
+        self.tof_window_size = tof_window_size
+        self.tof_readings_window = deque(maxlen=tof_window_size)
+        self.tof_window_sum = 0
+        self.tof_averaged_distance = 0
+        self.tof_last_distance = 0
 
     def intake(self, duration):
         """Start the intake"""
@@ -80,6 +102,28 @@ class Intake:
         self.main_servo.stop()
         self.lift_servo.stop()
     
+    def _update_tof_sliding_window(self, new_reading: float):
+        """Update sliding window average for TOF readings"""
+        # If window is full, subtract the value that will be removed
+        if len(self.tof_readings_window) == self.tof_window_size:
+            self.tof_window_sum -= self.tof_readings_window[0]
+        
+        # Add new reading
+        self.tof_readings_window.append(new_reading)
+        self.tof_window_sum += new_reading
+        
+        # Calculate average
+        self.tof_averaged_distance = self.tof_window_sum / len(self.tof_readings_window)
+    
     def update(self):
         self.main_servo.update()
         self.lift_servo.update()
+
+        # Get and average TOF distance
+        self.tof_last_distance = self.tof.get_distance().value
+        self._update_tof_sliding_window(self.tof_last_distance)
+
+        if self.tof_averaged_distance < 1.3:
+            self.duck_state = Intake.DETECTED_DUCK
+        else:
+            self.duck_state = Intake.NOT_DETECTED_DUCK

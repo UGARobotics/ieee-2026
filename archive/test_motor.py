@@ -10,9 +10,9 @@ import time
 os.environ["CTR_TARGET"] = "Hardware"
 
 canivore="Main" 
-stator_current_limit=120 
-stator_current_limit_enable=True
-motor0 = TalonFX(1, canivore)
+# stator_current_limit=120 
+# stator_current_limit_enable=True
+# motor0 = TalonFX(1, canivore)
 range = CANrange(0, canivore)
 
 print(range.get_distance())
