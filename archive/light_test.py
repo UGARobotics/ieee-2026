@@ -3,8 +3,6 @@ import time
 from smbus2 import SMBus
 from collections import deque
 
- 
-
 class LightSensor:
     """Light sensor handler for I2C controlled light sensors with support for dual sensors"""
     
@@ -104,14 +102,25 @@ class LightSensor:
 light_sensor = LightSensor(
     bus=1,
     address_primary=0x10,
+    address_secondary=0x11,
     use_secondary=False
 )
 
 try:
+    counter = 0
     while True:
+        if counter % 100 == 0 and counter > 0:
+            if light_sensor.address == 0x10:
+                light_sensor.switch_to_secondary()
+                print("Switched to secondary (0x11)")
+            else:
+                light_sensor.switch_to_primary()
+                print("Switched to primary (0x10)")
+        
         light_sensor.update()
-        print(f"Raw: {light_sensor.last_light_level} | Averaged: {light_sensor.averaged_light_level} | State: {light_sensor.state}")
+        print(f"Address: 0x{light_sensor.address:02x} | Raw: {light_sensor.last_light_level} | Averaged: {light_sensor.averaged_light_level} | State: {light_sensor.state}")
         time.sleep(0.1)
+        counter += 1
 except KeyboardInterrupt:
     light_sensor.stop()
     print("Stopped")
