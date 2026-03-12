@@ -7,10 +7,9 @@ class LightSensor:
     UNDETECTED = 0  # no light detected
     DETECTED = 1    # light detected
     
-    # TODO: update with necessary registers based on light sensor
-    REG_CONTROL = 0x00
-    REG_DATA_LOW = 0x0D
-    REG_DATA_HIGH = 0x0E
+    # VEML7700 Lux Sensor registers
+    REG_ALS_CONF = 0x00      # Configuration register
+    REG_ALS_DATA = 0x04      # ALS data register (ambient light level in lux)
     
     # TODO: adjust based on light sensitivity
     LIGHT_DETECTION_THRESHOLD = 100
@@ -18,8 +17,8 @@ class LightSensor:
     def __init__(
         self,
         bus: int = 1,
-        address_primary: int = 0x29,
-        address_secondary: int = 0x39,
+        address_primary: int = 0x10,
+        address_secondary: int = 0x11,
         use_secondary: bool = False,
         window_size: int = 5
     ):
@@ -50,17 +49,16 @@ class LightSensor:
         self.address = self.address_secondary
     
     def _read_light_level(self) -> int:
-        """ Read raw light level from sensor """
+        """ Read ambient light level from VEML7700 ALS register """
         if not self._bus:
             raise RuntimeError("I2C bus not open")
 
-        # TODO: Replace with actual sensor read commands
-        # This is a placeholder - the actual implementation depends on your sensor
-        # Example for a typical sensor:
-        # data = self._bus.read_i2c_block_data(self.address, self.REG_DATA_LOW, 2)
-        # light_level = (data[1] << 8) | data[0]
+        # Read 2 bytes from ALS_DATA register (0x04)
+        # Returns 16-bit lux value
+        data = self._bus.read_i2c_block_data(self.address, self.REG_ALS_DATA, 2)
         
-        light_level = 0  # Placeholder
+        # Combine bytes: low byte first, then high byte
+        light_level = (data[1] << 8) | data[0]
         return light_level
     
     def _update_sliding_window(self, new_reading: int):
@@ -78,7 +76,7 @@ class LightSensor:
     
     def update(self):
         """ Called every scheduler tick - reads light sensor, updates sliding window, and updates state """
-        # TODO: Implement actual light detection logic here
+
         # Read raw sensor value
         self.last_light_level = self._read_light_level()
         
