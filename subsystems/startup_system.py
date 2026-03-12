@@ -5,13 +5,10 @@ from utils.light_sensor import LightSensor
 
 class StartupSystem:
     """Subsystem for the startup system"""
-
     IDLE = 0 # will start off as IDLE
     WAITING = 1 # IDLE -> WAITING when gpio input detected
     RUNNING = 2 # when light is detected
 
-class StartupSystem:
-    """Subsystem for the startup system"""
     def __init__(self, pin=21):
         self.pin = pin
         self.state = StartupSystem.IDLE # starts as IDLE
@@ -29,6 +26,9 @@ class StartupSystem:
 
     def update(self):
         if self.state == StartupSystem.IDLE and self._is_high(): # is high + idle -> waiting
+
+            # swap state if testing without light sensor
+            #self.state = StartupSystem.RUNNING
             self.state = StartupSystem.WAITING
         elif self.state == StartupSystem.WAITING:
             # Check status of light sensor
