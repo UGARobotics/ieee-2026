@@ -1,4 +1,6 @@
-from smbus2 import SMBus
+import board
+import adafruit_veml7700
+
 from collections import deque
  
 class LightSensor:
@@ -7,28 +9,15 @@ class LightSensor:
     UNDETECTED = 0  # no light detected
     DETECTED = 1    # light detected
     
-    # VEML7700 Lux Sensor registers
-    REG_ALS_CONF = 0x00      # Configuration register
-    REG_ALS_DATA = 0x04      # ALS data register (ambient light level in lux)
     
-    # TODO: adjust based on light sensitivity
-    LIGHT_DETECTION_THRESHOLD = 100
+    LIGHT_DETECTION_THRESHOLD = 1100
     
     def __init__(
         self,
-        bus: int = 1,
-        address_primary: int = 0x10,
-        address_secondary: int = 0x11,
-        use_secondary: bool = False,
         window_size: int = 5
     ):
         """ Initialize light sensor """
-        self.bus_num = bus
-        self.address_primary = address_primary
-        self.address_secondary = address_secondary
-        self.address = address_secondary if use_secondary else address_primary
-        self._bus = None
-        
+
         self.state = self.UNDETECTED
         self.last_light_level = 0
         
@@ -36,30 +25,13 @@ class LightSensor:
         self.readings_window = deque(maxlen=window_size)
         self.window_sum = 0
         self.averaged_light_level = 0
+
+        self.i2c = board.I2C()
+        self._sensor = adafruit_veml7700.VEML7700(self.i2c)
         
-        # open bus
-        self._bus = SMBus(self.bus_num)
-        
-    def switch_to_primary(self):
-        """Switch to the primary sensor"""
-        self.address = self.address_primary
-    
-    def switch_to_secondary(self):
-        """Switch to the secondary sensor"""
-        self.address = self.address_secondary
-    
     def _read_light_level(self) -> int:
         """ Read ambient light level from VEML7700 ALS register """
-        if not self._bus:
-            raise RuntimeError("I2C bus not open")
-
-        # Read 2 bytes from ALS_DATA register (0x04)
-        # Returns 16-bit lux value
-        data = self._bus.read_i2c_block_data(self.address, self.REG_ALS_DATA, 2)
-        
-        # Combine bytes: low byte first, then high byte
-        light_level = (data[1] << 8) | data[0]
-        return light_level
+        return self._sensor.light_level
     
     def _update_sliding_window(self, new_reading: int):
         """ Sliding window helps filter the noise from false readings """
