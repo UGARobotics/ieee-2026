@@ -43,7 +43,7 @@ def all_subsystems_test(drivetrain, odometry, intake, tail, button_presser, star
 def tester_auto_button_presser(startup_system, button_presser):
     # Maybe go if stuck in WAITING for too long
 
-    while startup_system.state == StartupSystem.IDLE:
+    while startup_system.state != StartupSystem.RUNNING:
         yield
 
     time.sleep(1)

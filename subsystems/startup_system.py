@@ -17,7 +17,7 @@ class StartupSystem:
         GPIO.setup(self.pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # waiting for input
         
         # Initialize I2C light sensor (primary address by default)
-        self.light_sensor = LightSensor(use_secondary=False)    
+        self.light_sensor = LightSensor()    
 
     def _is_high(self) -> bool:
         pin_state = GPIO.input(self.pin)
@@ -25,11 +25,12 @@ class StartupSystem:
         return pin_state == GPIO.HIGH
 
     def update(self):
+        self.light_sensor.update()
         if self.state == StartupSystem.IDLE and self._is_high(): # is high + idle -> waiting
 
             # swap state if testing without light sensor
-            self.state = StartupSystem.RUNNING
-            # self.state = StartupSystem.WAITING
+            # self.state = StartupSystem.RUNNING
+            self.state = StartupSystem.WAITING
         elif self.state == StartupSystem.WAITING:
             # Check status of light sensor
             
