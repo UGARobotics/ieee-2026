@@ -6,7 +6,7 @@ from subsystems.drivetrain import Drivetrain
 from subsystems.intake import Intake
 from subsystems.button_presser import ButtonPresser
 from subsystems.startup_system import StartupSystem
-from autonomous.routines import core_odometry_routine, all_subsystems_test, tester_auto_button_presser, tester_auto_intake
+from autonomous.routines import core_odometry_routine, all_subsystems_test, tester_auto_button_presser, tester_auto_intake, tester_auto_tail
 
 import time
 
@@ -43,6 +43,7 @@ try:
     # scheduler.run_routine(core_odometry_routine(drivetrain, odometry, intake, tail, button_presser,startup_system))
     # scheduler.run_routine(tester_auto_button_presser(startup_system, button_presser))
     scheduler.run_routine(tester_auto_intake(intake))
+    # scheduler.run_routine(tester_auto_tail(tail))
 
 except KeyboardInterrupt:
     # emergency stop

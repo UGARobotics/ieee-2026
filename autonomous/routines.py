@@ -57,7 +57,7 @@ def tester_auto_button_presser(startup_system, button_presser):
     yield from button_presser.unpress()
 
 def tester_auto_tail(tail):
-    yield from tail.wag(tail.TIME_PER_WAG) # about one full spin
+    yield from tail.wag(tail.TIME_PER_WAG * 2) # about one full spin
 
 def tester_auto_intake(intake):
 #    yield from intake.lift()
