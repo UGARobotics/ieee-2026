@@ -79,21 +79,29 @@ def all_subsystems_test(drivetrain, odometry, intake, tail, button_presser, star
     
     
 
-def tester_auto_button_presser(startup_system, button_presser):
+def tester_auto_button_presser(startup_system, drivetrain, button_presser):
     # Maybe go if stuck in WAITING for too long
 
-    while startup_system.state != StartupSystem.RUNNING:
-        yield
+    # while startup_system.state != StartupSystem.RUNNING:
+    #    yield
 
+    yield from button_presser.unpress()
     time.sleep(1)
+    yield from button_presser.press_fourth()
+    #yield from drivetrain.strafe_left(0.25)
+    yield from button_presser.unpress()
+    yield from drivetrain.strafe_right(0.25)
+    time.sleep(1)
+    yield from button_presser.press_third()
+    yield from drivetrain.strafe_left(0.15)
+    yield from button_presser.unpress()
+    yield from drivetrain.strafe_right(0.25)
+    time.sleep(1)
+    yield from button_presser.press_first()
+    yield from drivetrain.strafe_left(0.15)
+    yield from button_presser.unpress()
+    yield from drivetrain.strafe_right(0.25)
 
-    yield from button_presser.unpress()
-    yield from button_presser.press()
-    yield from button_presser.unpress()
-    yield from button_presser.press()
-    yield from button_presser.unpress()
-    yield from button_presser.press()
-    yield from button_presser.unpress()
 
 def tester_auto_tail(tail):
     yield from tail.wag(tail.TIME_PER_WAG * 2) # about one full spin
