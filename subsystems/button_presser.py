@@ -4,7 +4,7 @@ class ButtonPresser:
     """Subsystem for the button pressing mechanism"""
 
     def __init__(self, pin=20):
-        self.servo = PositionalServo(pin, full_rotation_time = 4.2, initial_angle=280)
+        self.servo = PositionalServo(pin, full_rotation_time = 3.8, initial_angle=280)
 
     def press_fourth(self):
         self.servo.set_angle(145)
@@ -16,6 +16,11 @@ class ButtonPresser:
         while self.servo.state == PositionalServo.RUNNING:
             yield
 
+    def press_second(self):
+        self.servo.set_angle(165)
+        while self.servo.state == PositionalServo.RUNNING:
+            yield
+
     def press_first(self):
         self.servo.set_angle(175)
         while self.servo.state == PositionalServo.RUNNING:
@@ -23,6 +28,11 @@ class ButtonPresser:
     
     def unpress(self):
         self.servo.set_angle(135)
+        while self.servo.state == PositionalServo.RUNNING:
+            yield
+
+    def reset(self):
+        self.servo.set_angle(280)
         while self.servo.state == PositionalServo.RUNNING:
             yield
 

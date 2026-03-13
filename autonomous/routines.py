@@ -2,41 +2,81 @@ import time
 
 from subsystems.startup_system import StartupSystem
 from subsystems.intake import Intake
- 
+from utils.drone import Drone
+
+
 """Contains all of the different autonomous routines/runs over time. """
 
 def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, startup_system):
-    while startup_system.state != StartupSystem.RUNNING:
-        yield  
 
+    while startup_system.state != StartupSystem.RUNNING:
+        yield
+    
+    """
+    try:
+        drone = Drone()
+        if drone.connect():
+            drone.takeoff()
+            drone.move_right(0.5)
+            drone.land()
+            #drone.takeoff()
+            #drone.move_up(0.5)
+            #drone.move_left(0.5)
+            #drone.land()
+
+    except KeyboardInterrupt:
+        print (":(")
+    finally:
+        drone.stop()
+        drone.disconnect()
+    """
+    
     # drop off dawg
     yield from drivetrain.go_forward(15)
-    yield from drivetrain.strafe_right(6)
+    yield from drivetrain.strafe_right(14)
+    yield from drivetrain.turn_right(0.5)
+    yield from drivetrain.go_forward(7)
     yield from button_presser.unpress()
-
-    yield from drivetrain.go_forward(6)
-    yield from drivetrain.turn_left(0.5)
-    yield from drivetrain.go_forward(11)
+    yield from drivetrain.go_backward(7)
+    yield from drivetrain.strafe_right(4)
+    yield from drivetrain.turn_left(1)
+    # TODO: swap to timed
+    yield from drivetrain.go_backward_timed(2.5)
+    yield from drivetrain.go_forward(0.35)
+    yield from drivetrain.strafe_left(4.20)
 
     # should be somewhere near the antenna
-    yield from button_presser.press()
-    yield from button_presser.unpress()
-    yield from button_presser.press()
-    yield from button_presser.unpress()
-    yield from button_presser.press()
-    yield from button_presser.unpress()
 
-    # TODO: remove
-    return
-
+    yield from button_presser.press_second()
+    yield from button_presser.unpress()
+    yield from button_presser.press_second()
+    yield from button_presser.unpress()
+    yield from button_presser.press_second()
+    yield from button_presser.unpress()
+    yield from button_presser.press_second()
+    yield from button_presser.unpress()
+    
+    """
+    yield from drivetrain.strafe_right(0.25)
+    yield from drivetrain.strafe_left(0.25)
+    yield from drivetrain.strafe_right(0.25)
+    yield from drivetrain.strafe_left(0.25)
+    yield from drivetrain.strafe_right(0.25)
+    yield from drivetrain.strafe_left(0.25)
+    yield from button_presser.unpress()
+    """
+    
     yield from drivetrain.strafe_right(8)
-    yield from drivetrain.turn_left(0.5)
-    yield from drivetrain.strafe_right(5)
+    yield from button_presser.reset()
+    yield from drivetrain.go_forward(8)
+    yield from drivetrain.turn_right(0.75)
+    yield from drivetrain.strafe_right(7.5)
+    yield from drivetrain.go_backward(8.2)
 
     # should be near duck
 
     while intake.duck_state == Intake.NOT_DETECTED_DUCK:
-        yield from drivetrain.go_forward(2, seeking=True)
+        yield from drivetrain.go_forward(1.6, seeking=True)
     
     yield from drivetrain.turn_left(0.1, shimmy=True)
     yield from drivetrain.turn_right(0.1, shimmy=True)
@@ -45,6 +85,49 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
     
     yield from intake.intake_while_drop(2)
     yield from intake.intake_while_lift(3)
+
+    yield from drivetrain.turn_left(0.5)
+    yield from drivetrain.go_forward(3)
+    yield from intake.drop_outtake_height()
+    yield from intake.outtake(2)
+    yield from intake.lift()
+
+    yield from drivetrain.go_backward(6)
+    yield from drivetrain.turn_right(0.25)
+
+    yield from drivetrain.strafe_left_timed(1.4)
+    yield from drivetrain.go_backward_timed(3.3)
+    yield from drivetrain.strafe_left_timed(1.4)
+
+    yield from drivetrain.go_forward(20)
+    yield from drivetrain.strafe_right(21)
+    yield from drivetrain.turn_right(1)
+    yield from drivetrain.go_backward(5)
+    
+    # should be near duck
+
+    while intake.duck_state == Intake.NOT_DETECTED_DUCK:
+        yield from drivetrain.go_forward(1.6, seeking=True)
+    
+    yield from drivetrain.turn_left(0.1, shimmy=True)
+    yield from drivetrain.turn_right(0.1, shimmy=True)
+    yield from drivetrain.turn_left(0.1, shimmy=True)
+    yield from drivetrain.turn_right(0.1, shimmy=True)
+    
+    yield from intake.intake_while_drop(2)
+    yield from intake.intake_while_lift(3)
+
+    yield from drivetrain.turn_left(1)
+    yield from drivetrain.strafe_right(6)
+    yield from intake.drop_outtake_height()
+    yield from intake.outtake(3)
+    yield from intake.lift()
+
+    # we go for third duck
+
+    
+
+    
 
     """
     yield from button_presser.unpress()
@@ -128,8 +211,8 @@ def tester_auto_tail(tail):
 def tester_auto_intake(startup_system, drivetrain, intake):
 #    yield from intake.lift()
 #    yield from drivetrain.go_forward(12)
-    while startup_system.state == StartupSystem.IDLE:
-        yield
+#    while startup_system.state == StartupSystem.IDLE:
+#        yield
 
     time.sleep(1)
 

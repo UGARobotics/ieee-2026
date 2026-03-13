@@ -104,3 +104,23 @@ class Drone:
 # -----------------------------
 # MAIN PROCEDURE
 # -----------------------------
+
+drone = Drone()
+
+try:
+
+    if drone.connect():
+
+        drone.move_up(0.5)
+        drone.hover(2)
+        drone.move_forward(0.5)
+        drone.land()
+
+except KeyboardInterrupt:
+
+    print("Manual interrupt")
+
+finally:
+
+    drone.stop()
+    drone.disconnect()

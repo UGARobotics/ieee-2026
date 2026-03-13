@@ -111,7 +111,12 @@ class Intake:
         self.lift_servo.set_angle(150)
         while self.lift_servo.state == PositionalServo.RUNNING:
             yield
-
+            
+    def drop_outtake_height(self):
+        self.lift_servo.set_angle(120)
+        while self.lift_servo.state == PositionalServo.RUNNING:
+            yield
+            
     def stop(self):
         self.main_servo.stop()
         self.lift_servo.stop()

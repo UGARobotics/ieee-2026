@@ -23,7 +23,7 @@ class Drivetrain:
             self.intake.lift_servo.set_angle(100)
         elif seeking:
             self.intake.main_servo.move(-1.0)
-            self.lift_servo.set_angle(140)
+            self.intake.lift_servo.set_angle(168)
 
         self.motors[0].move(15)
         self.motors[1].move(-15)
@@ -183,6 +183,76 @@ class Drivetrain:
         self.motors[1].stop()
         self.motors[2].stop()
         self.motors[3].stop()
+
+    def go_forward_timed(self, duration):
+        now = time.monotonic()
+        end_time = now + duration
+
+        self.motors[0].move(15)
+        self.motors[1].move(-15)
+        self.motors[2].move(15)
+        self.motors[3].move(-15)
+
+        while time.monotonic() <= end_time:
+            yield
+
+        self.motors[0].stop()
+        self.motors[1].stop()
+        self.motors[2].stop()
+        self.motors[3].stop()
+
+
+    def go_backward_timed(self, duration):
+        now = time.monotonic()
+        end_time = now + duration
+
+        self.motors[0].move(-15)
+        self.motors[1].move(15)
+        self.motors[2].move(-15)
+        self.motors[3].move(15)
+
+        while time.monotonic() <= end_time:
+            yield
+
+        self.motors[0].stop()
+        self.motors[1].stop()
+        self.motors[2].stop()
+        self.motors[3].stop()
+
+    def strafe_left_timed(self, duration):
+        now = time.monotonic()
+        end_time = now + duration
+
+        self.motors[0].move(15)
+        self.motors[1].move(15)
+        self.motors[2].move(-15)
+        self.motors[3].move(-15)
+
+        while time.monotonic() <= end_time:
+            yield
+
+        self.motors[0].stop()
+        self.motors[1].stop()
+        self.motors[2].stop()
+        self.motors[3].stop()
+
+    def strafe_right_timed(self, duration):
+        now = time.monotonic()
+        end_time = now + duration
+
+        self.motors[0].move(-15)
+        self.motors[1].move(-15)
+        self.motors[2].move(15)
+        self.motors[3].move(15)
+
+        while time.monotonic() <= end_time:
+            yield
+
+        self.motors[0].stop()
+        self.motors[1].stop()
+        self.motors[2].stop()
+        self.motors[3].stop()
+
 
     def check_all_faults(self):
         self.motors[0].check_faults()
