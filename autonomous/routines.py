@@ -67,10 +67,12 @@ def tester_auto_intake(intake):
     yield from intake.intake_while_drop(2)
     while intake.duck_state == Intake.NOT_DETECTED_DUCK:
         yield from intake.intake_while_drop(2)
-        print("not")
- 
-#    yield from intake.intake_while_lift(10)
-    yield from intake.lift()
+
+    yield from intake.intake_while_lift(3)
+    yield from intake.outtake(2)
+#    yield from intake.lift()
+
+#    yield from intake.intake(2)
 #    yield from drivetrain.turn_left(1)
 #    yield from drivetrain.go_forward(12)
         

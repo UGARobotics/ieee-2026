@@ -60,7 +60,7 @@ class Intake:
         now = time.monotonic()
         end_time = now + duration
         self.main_servo.move(-0.5)
-        self.lift_servo.set_angle(100)
+        self.lift_servo.set_angle(20)
 
         while time.monotonic() < end_time:
             yield
@@ -71,8 +71,8 @@ class Intake:
         """Start the intake while lifting"""
         now = time.monotonic()
         end_time = now + duration
-        self.main_servo.move(-0.5)
-        self.lift_servo.set_angle(150)
+        self.main_servo.move(-1.0)
+        self.lift_servo.set_angle(160)
 
         while time.monotonic() < end_time:
             yield
