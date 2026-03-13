@@ -14,13 +14,16 @@ class Drivetrain:
         self.odometry = odometry
         self.intake = intake
 
-    def go_forward(self, distance, holding=False):
+    def go_forward(self, distance, holding=False, seeking=False):
         _, y, _ = self.odometry.get_position()
         target_y = y + distance
 
         if holding:
             self.intake.main_servo.move(-0.5)
             self.intake.lift_servo.set_angle(100)
+        elif seeking:
+            self.intake.main_servo.move(-1.0)
+            self.lift_servo.set_angle(140)
 
         self.motors[0].move(15)
         self.motors[1].move(-15)
@@ -33,7 +36,7 @@ class Drivetrain:
             print(abs(target_y - y))
             yield        
 
-        if holding:
+        if holding or seeking:
             self.intake.main_servo.move(0)
 
         self.motors[0].stop()

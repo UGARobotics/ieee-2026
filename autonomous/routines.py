@@ -9,14 +9,6 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
     while startup_system.state != StartupSystem.RUNNING:
         yield  
 
-        
-
-def all_subsystems_test(drivetrain, odometry, intake, tail, button_presser, startup_system):
-
-    # Maybe go if stuck in WAITING for too long 
-    while startup_system.state == StartupSystem.IDLE:
-        yield
-
     # drop off dawg
     yield from drivetrain.go_forward(15)
     yield from drivetrain.strafe_right(6)
@@ -26,8 +18,41 @@ def all_subsystems_test(drivetrain, odometry, intake, tail, button_presser, star
     yield from drivetrain.turn_left(0.5)
     yield from drivetrain.go_forward(11)
 
-    # should be somewhere near the thingimagj
+    # should be somewhere near the antenna
+    yield from button_presser.press()
+    yield from button_presser.unpress()
+    yield from button_presser.press()
+    yield from button_presser.unpress()
+    yield from button_presser.press()
+    yield from button_presser.unpress()
+
+    # TODO: remove
+    return
+
+    yield from drivetrain.strafe_right(8)
+    yield from drivetrain.turn_left(0.5)
+    yield from drivetrain.strafe_right(5)
+
+    # should be near duck
+
+    while intake.duck_state == Intake.NOT_DETECTED_DUCK:
+        yield from drivetrain.go_forward(2, seeking=True)
     
+    yield from drivetrain.turn_left(0.1, shimmy=True)
+    yield from drivetrain.turn_right(0.1, shimmy=True)
+    yield from drivetrain.turn_left(0.1, shimmy=True)
+    yield from drivetrain.turn_right(0.1, shimmy=True)
+    
+    yield from intake.intake_while_drop(2)
+    yield from intake.intake_while_lift(3)
+
+
+def all_subsystems_test(drivetrain, odometry, intake, tail, button_presser, startup_system):
+
+    # Maybe go if stuck in WAITING for too long 
+    while startup_system.state == StartupSystem.IDLE:
+        yield
+
 
     """
     time.sleep(1)
@@ -82,7 +107,7 @@ def tester_auto_intake(startup_system, drivetrain, intake):
     time.sleep(1)
 
     yield from intake.lift()
-    print(intake.tof_averaged_distance)
+
     while intake.duck_state == Intake.NOT_DETECTED_DUCK:
         yield from intake.seek(2)
 
