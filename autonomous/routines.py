@@ -1,6 +1,7 @@
 import time
 
 from subsystems.startup_system import StartupSystem
+from subsystems.intake import Intake
  
 """Contains all of the different autonomous routines/runs over time. """
 
@@ -58,13 +59,20 @@ def tester_auto_button_presser(startup_system, button_presser):
 def tester_auto_tail(tail):
     yield from tail.wag(tail.TIME_PER_WAG) # about one full spin
 
-def tester_auto_intake(drivetrain, intake):
+def tester_auto_intake(intake):
 #    yield from intake.lift()
-    yield from drivetrain.go_forward(12)
-    yield from intake.intake_while_drop(5)
-    yield from intake.intake_while_lift(30)
-    yield from drivetrain.turn_left(1)
-    yield from drivetrain.go_forward(12)
+#    yield from drivetrain.go_forward(12)
+    yield from intake.lift()
+
+    yield from intake.intake_while_drop(2)
+    while intake.duck_state == Intake.NOT_DETECTED_DUCK:
+        yield from intake.intake_while_drop(2)
+        print("not")
+ 
+#    yield from intake.intake_while_lift(10)
+    yield from intake.lift()
+#    yield from drivetrain.turn_left(1)
+#    yield from drivetrain.go_forward(12)
         
 
 def tester_auto_odom(drivetrain, odometry):

@@ -31,6 +31,8 @@ class Intake:
         self.tof_averaged_distance = 0
         self.tof_last_distance = 0
 
+        self.ctr = 0
+
     def intake(self, duration):
         """Start the intake"""
         now = time.monotonic()
@@ -69,7 +71,7 @@ class Intake:
         """Start the intake while lifting"""
         now = time.monotonic()
         end_time = now + duration
-        self.main_servo.move(-1.0)
+        self.main_servo.move(-0.5)
         self.lift_servo.set_angle(150)
 
         while time.monotonic() < end_time:
@@ -119,11 +121,14 @@ class Intake:
         self.main_servo.update()
         self.lift_servo.update()
 
+        self.ctr += 1
+
         # Get and average TOF distance
         self.tof_last_distance = self.tof.get_distance().value
         self._update_tof_sliding_window(self.tof_last_distance)
 
-        if self.tof_averaged_distance < 1.3:
+        if self.tof_averaged_distance < 1.2:
             self.duck_state = Intake.DETECTED_DUCK
         else:
             self.duck_state = Intake.NOT_DETECTED_DUCK
+
