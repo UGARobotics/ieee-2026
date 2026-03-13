@@ -59,17 +59,23 @@ def tester_auto_button_presser(startup_system, button_presser):
 def tester_auto_tail(tail):
     yield from tail.wag(tail.TIME_PER_WAG * 2) # about one full spin
 
-def tester_auto_intake(intake):
+def tester_auto_intake(startup_system, intake):
 #    yield from intake.lift()
 #    yield from drivetrain.go_forward(12)
+    while startup_system.state == StartupSystem.IDLE:
+        yield
+
+    time.sleep(1)
+
     yield from intake.lift()
 
-    yield from intake.intake_while_drop(2)
     while intake.duck_state == Intake.NOT_DETECTED_DUCK:
-        yield from intake.intake_while_drop(2)
+        yield from intake.seek(2)
 
+    yield from intake.intake_while_drop(2)
     yield from intake.intake_while_lift(3)
-    yield from intake.outtake(2)
+#    time.sleep(1)
+#    yield from intake.outtake(2)
 #    yield from intake.lift()
 
 #    yield from intake.intake(2)

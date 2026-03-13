@@ -67,12 +67,24 @@ class Intake:
 
         self.main_servo.move(0.0)
 
+    def seek(self, duration):
+        """Start the intake while lifting"""
+        now = time.monotonic()
+        end_time = now + duration
+        self.main_servo.move(-1.0)
+        self.lift_servo.set_angle(130)
+
+        while time.monotonic() < end_time:
+            yield
+
+        self.main_servo.move(0.0)
+
     def intake_while_drop(self, duration):
         """Start the intake while lifting"""
         now = time.monotonic()
         end_time = now + duration
         self.main_servo.move(-1.0)
-        self.lift_servo.set_angle(160)
+        self.lift_servo.set_angle(130)
 
         while time.monotonic() < end_time:
             yield
@@ -91,7 +103,7 @@ class Intake:
         self.main_servo.move(0.0)
 
     def lift(self):
-        self.lift_servo.set_angle(20)
+        self.lift_servo.set_angle(8)
         while self.lift_servo.state == PositionalServo.RUNNING:
             yield
 
@@ -120,8 +132,6 @@ class Intake:
     def update(self):
         self.main_servo.update()
         self.lift_servo.update()
-
-        self.ctr += 1
 
         # Get and average TOF distance
         self.tof_last_distance = self.tof.get_distance().value

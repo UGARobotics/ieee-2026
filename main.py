@@ -42,7 +42,7 @@ try:
     # scheduler.run_routine(all_subsystems_test(drivetrain, odometry, intake, tail, button_presser,startup_system))
     # scheduler.run_routine(core_odometry_routine(drivetrain, odometry, intake, tail, button_presser,startup_system))
     # scheduler.run_routine(tester_auto_button_presser(startup_system, button_presser))
-    scheduler.run_routine(tester_auto_intake(intake))
+    scheduler.run_routine(tester_auto_intake(startup_system, intake))
     # scheduler.run_routine(tester_auto_tail(tail))
 
 except KeyboardInterrupt:
