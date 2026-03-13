@@ -46,6 +46,25 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
     yield from intake.intake_while_drop(2)
     yield from intake.intake_while_lift(3)
 
+    """
+    yield from button_presser.unpress()
+    time.sleep(1)
+    yield from button_presser.press_fourth()
+    #yield from drivetrain.strafe_left(0.25)
+    yield from button_presser.unpress()
+    yield from drivetrain.strafe_right(0.25)
+    time.sleep(1)
+    yield from button_presser.press_third()
+    yield from drivetrain.strafe_left(0.15)
+    yield from button_presser.unpress()
+    yield from drivetrain.strafe_right(0.25)
+    time.sleep(1)
+    yield from button_presser.press_first()
+    yield from drivetrain.strafe_left(0.15)
+    yield from button_presser.unpress()
+    yield from drivetrain.strafe_right(0.25)
+    """
+
 
 def all_subsystems_test(drivetrain, odometry, intake, tail, button_presser, startup_system):
 
