@@ -122,11 +122,13 @@ class Drivetrain:
         self.motors[2].stop()
         self.motors[3].stop()
 
-    def turn_left(self, rotation, holding=False):
+    def turn_left(self, rotation, holding=False, shimmy=False):
 
         duration = rotation * self.TIME_PER_PI
 
-        if holding:
+        if shimmy:
+            self.intake.main_servo.move(-0.5)
+        elif holding:
             self.intake.main_servo.move(-0.5)
             self.intake.lift_servo.set_angle(100)
 
@@ -141,7 +143,7 @@ class Drivetrain:
         while time.monotonic() <= end_time:
             yield
 
-        if holding:
+        if holding or shimmy:
             self.intake.main_servo.move(0)
         
         self.motors[0].stop()
@@ -150,11 +152,13 @@ class Drivetrain:
         self.motors[3].stop()
 
 
-    def turn_right(self, rotation, holding=False):
+    def turn_right(self, rotation, holding=False, shimmy=False):
         
         duration = rotation * self.TIME_PER_PI
 
-        if holding:
+        if shimmy:
+            self.intake.main_servo.move(-0.5)
+        elif holding:
             self.intake.main_servo.move(-0.5)
             self.intake.lift_servo.set_angle(100)
         
@@ -169,7 +173,7 @@ class Drivetrain:
         while time.monotonic() <= end_time:
             yield
             
-        if holding:
+        if holding or shimmy:
             self.intake.main_servo.move(0)
         
         self.motors[0].stop()

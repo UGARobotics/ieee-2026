@@ -28,8 +28,8 @@ class StartupSystem:
         if self.state == StartupSystem.IDLE and self._is_high(): # is high + idle -> waiting
 
             # swap state if testing without light sensor
-            # self.state = StartupSystem.RUNNING
-            self.state = StartupSystem.WAITING
+            self.state = StartupSystem.RUNNING
+            # self.state = StartupSystem.WAITING
         elif self.state == StartupSystem.WAITING:
             # Check status of light sensor
             

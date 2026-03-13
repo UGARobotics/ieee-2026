@@ -72,7 +72,7 @@ class Intake:
         now = time.monotonic()
         end_time = now + duration
         self.main_servo.move(-1.0)
-        self.lift_servo.set_angle(130)
+        self.lift_servo.set_angle(140)
 
         while time.monotonic() < end_time:
             yield
@@ -84,7 +84,7 @@ class Intake:
         now = time.monotonic()
         end_time = now + duration
         self.main_servo.move(-1.0)
-        self.lift_servo.set_angle(130)
+        self.lift_servo.set_angle(150)
 
         while time.monotonic() < end_time:
             yield
@@ -137,7 +137,7 @@ class Intake:
         self.tof_last_distance = self.tof.get_distance().value
         self._update_tof_sliding_window(self.tof_last_distance)
 
-        if self.tof_averaged_distance < 1.2:
+        if self.tof_averaged_distance < 0.13:
             self.duck_state = Intake.DETECTED_DUCK
         else:
             self.duck_state = Intake.NOT_DETECTED_DUCK
