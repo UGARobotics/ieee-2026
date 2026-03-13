@@ -9,7 +9,7 @@ class LightSensor:
     UNDETECTED = 0  # no light detected
     DETECTED = 1    # light detected
     
-     LIGHT_DETECTION_THRESHOLD = 1100
+    LIGHT_DETECTION_THRESHOLD = 1100
     
     def __init__(
         self,

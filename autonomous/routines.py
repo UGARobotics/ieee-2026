@@ -6,8 +6,10 @@ from subsystems.intake import Intake
 """Contains all of the different autonomous routines/runs over time. """
 
 def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, startup_system):
-    pass
+    while startup_system.state != StartupSystem.RUNNING:
+        yield  
 
+        
 
 def all_subsystems_test(drivetrain, odometry, intake, tail, button_presser, startup_system):
 
@@ -15,8 +17,20 @@ def all_subsystems_test(drivetrain, odometry, intake, tail, button_presser, star
     while startup_system.state == StartupSystem.IDLE:
         yield
 
-    time.sleep(1)
+    # drop off dawg
+    yield from drivetrain.go_forward(15)
+    yield from drivetrain.strafe_right(6)
+    yield from button_presser.unpress()
+
+    yield from drivetrain.go_forward(6)
+    yield from drivetrain.turn_left(0.5)
+    yield from drivetrain.go_forward(11)
+
+    # should be somewhere near the thingimagj
+    
+
     """
+    time.sleep(1)
     yield from drivetrain.go_forward(12)
     print(odometry.get_position())
     time.sleep(1)
@@ -25,19 +39,19 @@ def all_subsystems_test(drivetrain, odometry, intake, tail, button_presser, star
     yield from button_presser.press()
     yield from button_presser.unpress()
     time.sleep(1)
-    """
     yield from intake.intake_while_drop(5)
     yield from intake.intake_while_lift(5)
     time.sleep(1)
     yield from drivetrain.go_forward(12, holding=True)
     print(odometry.get_position())
 
-    """
+    
     time.sleep(1)
     yield from intake.lift()
     time.sleep(1)
     yield from tail.wag(tail.TIME_PER_WAG)
     """
+    
     
 
 def tester_auto_button_presser(startup_system, button_presser):
