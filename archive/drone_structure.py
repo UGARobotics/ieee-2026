@@ -1,105 +1,126 @@
-
-"""
-This script shows a simple scripted flight path using the MotionCommander class.
-
-Simple example that connects to the crazyflie at `URI` and runs a
-sequence. Change the URI variable to your Crazyflie configuration.
-"""
-import logging
 import time
 import cflib.crtp
+
 from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
 from cflib.positioning.motion_commander import MotionCommander
-import cv2
+
 
 class Drone:
+
     def __init__(self):
 
-
-        # Radio Basics
+        # Radio settings
         self.URI = 'radio://0/80/2M/E7E7E7E7E7'
-        self.logging.basicConfig(level=logging.ERROR)
+        self.default_height = 0.5
+
         self.scf = None
         self.mc = None
 
         cflib.crtp.init_drivers()
 
-        # Camera Basics
-        self.cap = cv2.VideoCapture(0, cv2.CAP_V4L2)
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 720)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-        self.cap.set(cv2.CAP_PROP_FPS, 30)
-        self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+    # -----------------------------
+    # CONNECTION
+    # -----------------------------
 
     def connect(self):
+
         try:
-            self._scf = SyncCrazyflie(self.URI).__enter__()
-            self._scf.cf.platform.send_arming_request(True)
-            time.sleep(1.0)
-            self._mc = MotionCommander(self._scf, default_height=self.default_height).__enter__()
-            time.sleep(1.0)
-            print("Connected?")
-        except:
-            print("Error Connecting")
+            self.scf = SyncCrazyflie(self.URI)
+            self.scf.open_link()
 
-    def stop(self):
-        self.mc.stop()
+            self.scf.cf.platform.send_arming_request(True)
+            time.sleep(1)
 
-    '''
-    DRONE MOVEMENT COMMANDS
-    '''
+            self.mc = MotionCommander(self.scf, default_height=self.default_height)
+            self.mc.take_off()
 
-    def move_right(self, distance: float, velocity: float = 0.5) -> None:
-        self.mc.right(distance, velocity=velocity)
+            print("Connected to Crazyflie")
+            return True
 
-    def move_left(self, distance: float, velocity: float) -> None:
-         self.mc.left(distance, velocity=velocity)
+        except Exception as e:
+            print("Connection failed:", e)
+            return False
 
-    def move_forward(self, distance: float, velocity: float) -> None:
-         self.mc.forward(distance, velocity=velocity)
+    def disconnect(self):
 
-    def move_back(self, distance: float, velocity: float) -> None:
-         self.mc.back(distance, velocity=velocity)
+        try:
+            if self.mc:
+                self.mc.land()
 
-    def move_up(self, distance: float, velocity: float) -> None:
-         self.mc.up(distance, velocity=velocity)
+            if self.scf:
+                self.scf.close_link()
 
-    def move_down(self, distance: float, velocity: float) -> None:
-         self.mc.down(distance, velocity=velocity)
+            print("Disconnected")
 
-    def land(self) -> None:
-        self.mc.land()
+        except Exception as e:
+            print("Disconnect error:", e)
 
-    def hover(self, duration: float) -> None:
+    # -----------------------------
+    # MOVEMENT
+    # -----------------------------
+
+    def move_up(self, distance, velocity=0.3):
+        if self.mc:
+            self.mc.up(distance, velocity=velocity)
+
+    def move_down(self, distance, velocity=0.3):
+        if self.mc:
+            self.mc.down(distance, velocity=velocity)
+
+    def move_forward(self, distance, velocity=0.4):
+        if self.mc:
+            self.mc.forward(distance, velocity=velocity)
+
+    def move_back(self, distance, velocity=0.4):
+        if self.mc:
+            self.mc.back(distance, velocity=velocity)
+
+    def move_left(self, distance, velocity=0.4):
+        if self.mc:
+            self.mc.left(distance, velocity=velocity)
+
+    def move_right(self, distance, velocity=0.4):
+        if self.mc:
+            self.mc.right(distance, velocity=velocity)
+
+    def hover(self, duration):
         time.sleep(duration)
 
-    '''
-    CAMERA COMMANDS
-    '''
+    def stop(self):
+        if self.mc:
+            self.mc.stop()
 
-    def capture_from_rc832(output_path: str = "capture.png") -> None
-        if not self.cap.isOpened():
-            raise RuntimeError("Could not open /dev/video0 — check capture card is connected")
+    def land(self):
+        if self.mc:
+            self.mc.land()
 
-        #for _ in range(5):
+    def shimmy(self, duration):
+        time.sleep(duration/2)
+        self.mc.move_forward(0.001)
+        self.mc.move_backward(0.001)
+        time.sleep(duration/2)
 
-        ret, frame = self.cap.read()        
 
+# -----------------------------
+# MAIN PROCEDURE
+# -----------------------------
 
-        # set color states
-        # state = COLOR.BLUE
-        # confirmation = CONFIRMED
-        # if past 20 frames has blue, then confirmed blue
-        
-        #cv2.imwrite(output_path, frame)
-        print(f"Saved {output_path}")
+drone = Drone()
 
-    def stop():
-        self.cap.release()
+try:
 
-    '''
-    IR COMMANDS
-    '''
+    if drone.connect():
 
-    def ir_transmit():
+        drone.move_up(0.5)
+        drone.hover(2)
+        drone.move_forward(0.5)
+        drone.land()
 
+except KeyboardInterrupt:
+
+    print("Manual interrupt")
+
+finally:
+
+    drone.stop()
+    drone.disconnect()
