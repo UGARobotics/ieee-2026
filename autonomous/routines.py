@@ -121,13 +121,21 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
     yield from drivetrain.strafe_right(6)
     yield from intake.drop_outtake_height()
     yield from intake.outtake(3)
-    yield from intake.lift()
-
-    # we go for third duck
+    yield from intake.lift()    
 
     yield from drivetrain.strafe_left_timed(1.7)
     yield from drivetrain.go_backward_timed(3.6)
     yield from drivetrain.strafe_left_timed(1.7)
+    # we go for third duck
+
+    # after, we go for the fourth antenna
+    # then, we scurry around the field to the side
+    # pickup duck on the way
+    # push away other duck to the side or avoid it altogether
+    # try to do the second antenna w duck sucked
+    # push duck into area
+    # drop grabbed duck into area
+
 
     """
     yield from button_presser.unpress()
@@ -186,8 +194,62 @@ def tester_auto_button_presser(startup_system, drivetrain, button_presser):
 
     # while startup_system.state != StartupSystem.RUNNING:
     #    yield
+    """
 
+    """
     # 73738#
+    
+    # 7
+    yield from drivetrain.go_backward(0.14)
+    yield from drivetrain.strafe_right(0.13)
+    time.sleep(0.5)
+    yield from button_presser.press_third()
+    yield from button_presser.unpress()
+    time.sleep(0.5)
+    
+    # 3
+    yield from drivetrain.go_forward(0.29)
+    yield from drivetrain.strafe_right(0.293)
+    time.sleep(0.5)
+    yield from button_presser.press_first()
+    yield from button_presser.unpress()
+    time.sleep(0.5)
+
+    # 7
+    yield from drivetrain.go_backward(0.29)
+    yield from drivetrain.strafe_left(0.293)
+    time.sleep(0.5)
+    yield from button_presser.press_third()
+    yield from button_presser.unpress()
+    time.sleep(0.5)
+
+    # 3
+    yield from drivetrain.go_forward(0.29)
+    yield from drivetrain.strafe_right(0.293)
+    time.sleep(0.5)
+    yield from button_presser.press_first()
+    yield from button_presser.unpress()
+    time.sleep(0.5)
+
+    # 8
+    yield from drivetrain.go_backward(0.15)
+    yield from drivetrain.strafe_left(0.293)
+    time.sleep(0.5)
+    yield from button_presser.press_third()
+    yield from button_presser.unpress()
+    time.sleep(0.5)
+
+    # #
+    yield from drivetrain.go_forward(0.15)
+    yield from drivetrain.strafe_left(0.13)
+    time.sleep(0.5)
+    yield from button_presser.press_fourth()
+    yield from button_presser.unpress()
+    time.sleep(0.5)
+    
+
+    """
+    SIDE 2 SIDE:
     yield from button_presser.press_fourth()
     time.sleep(1)
     yield from button_presser.unpress()
@@ -207,16 +269,19 @@ def tester_auto_button_presser(startup_system, drivetrain, button_presser):
     yield from button_presser.unpress()
     time.sleep(0.5)
 
-    """
+
+    UP N DOWN:
     yield from button_presser.press_fourth()
     time.sleep(1)
     yield from button_presser.unpress()
     time.sleep(0.5)
+
     yield from drivetrain.strafe_right(0.13)
     yield from button_presser.press_third()
     time.sleep(1)
     yield from button_presser.unpress()
     time.sleep(0.5)
+
     yield from drivetrain.strafe_right(0.153)
     yield from button_presser.press_second()
     time.sleep(0.5)
@@ -226,47 +291,6 @@ def tester_auto_button_presser(startup_system, drivetrain, button_presser):
     yield from button_presser.press_first()
     time.sleep(1)
     yield from button_presser.unpress()
-    """
-
-    
-    """
-    yield from button_presser.unpress()
-    time.sleep(1)
-    # 7
-    yield from drivetrain.go_backward(0.25)
-    yield from button_presser.press_third()
-    yield from button_presser.unpress()
-    time.sleep(1)
-    # 3
-    yield from drivetrain.strafe_right(0.4)
-    yield from drivetrain.go_forward(0.5)
-    yield from button_presser.press_first()
-    yield from button_presser.unpress()
-    time.sleep(1)
-    # 7
-    yield from drivetrain.strafe_left(0.4)
-    yield from drivetrain.go_backward(0.5)
-    yield from button_presser.press_third()
-    yield from button_presser.unpress()
-    time.sleep(1)
-    # 3
-    yield from drivetrain.strafe_right(0.4)
-    yield from drivetrain.go_forward(0.5)
-    yield from button_presser.press_first()
-    yield from button_presser.unpress()
-    # 8
-    yield from drivetrain.strafe_left(0.4)
-    yield from drivetrain.go_backward(0.25)
-    yield from button_presser.press_third()
-    yield from button_presser.unpress()
-    time.sleep(1)
-    # #
-    yield from drivetrain.strafe_left(0.15)
-    yield from drivetrain.go_forward(0.25)
-    yield from button_presser.press_fourth()
-    yield from button_presser.unpress()
-    time.sleep(1)
-
     """
 
 
