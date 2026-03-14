@@ -9,15 +9,31 @@ from utils.drone import Drone
 
 """Contains all of the different autonomous routines/runs over time. """
 def drone_flight():
-    #time.sleep(5)
+
     try: 
         drone = Drone()
         if drone.connect():
             drone.takeoff()
-            for _ in range(500):
+            # fly forward
+            for _ in range(200):
+                yield
+
+            drone.move_left(0.1)
+            # move right
+            for _ in range(200):
+                yield
+
+            drone.up(0.1)
+            # stop movement
+            for _ in range(200):
+
                 yield
 
             drone.land()
+
+            for _ in range(500):
+                yield
+
     except:
         print(":(")
     finally:
@@ -28,11 +44,11 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
 
     while startup_system.state != StartupSystem.RUNNING:
         yield
-    
+    """
     yield from drivetrain.go_forward(15)
-    yield from drone_flight()
+    # yield from drone_flight()
     # STAGE 1: FIRST HALF OF FIELD
-
+    
     # drop off dawg
     
     yield from drivetrain.strafe_right(8)
@@ -71,8 +87,13 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
 
     # should be near duck
 
+    ctr = 0
     while intake.duck_state == Intake.NOT_DETECTED_DUCK:
         yield from drivetrain.go_forward(1.6, seeking=True)
+        ctr += 1
+        print(ctr)
+        if ctr >= 2:
+            break
     
     yield from drivetrain.turn_left(0.1, shimmy=True)
     yield from drivetrain.turn_right(0.1, shimmy=True)
@@ -89,6 +110,7 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
 
     yield from drivetrain.turn_left(0.75)
     # should be near duck
+    yield from drivetrain.strafe_left(3)
 
     while intake.duck_state == Intake.NOT_DETECTED_DUCK:
         yield from drivetrain.go_forward(1.6, seeking=True)
@@ -101,7 +123,7 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
     yield from intake.intake_while_lift(2)
 
     yield from drivetrain.turn_left(1.0)
-    yield from drivetrain.strafe_right(11)
+    yield from drivetrain.strafe_right(9)
     yield from drivetrain.go_forward(6)
     yield from intake.drop_outtake_height()
     yield from intake.outtake(1)
@@ -129,10 +151,16 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
     yield from drivetrain.go_backward_timed(2)
     yield from drivetrain.strafe_right_timed(1)
 
+    """
+#    time.sleep(1)
 
-    time.sleep(1)
+    ctr = 0    
     while intake.duck_state == Intake.NOT_DETECTED_DUCK:
         yield from drivetrain.go_forward(1.7, seeking=True)
+        ctr += 1
+        if ctr >= (50 * 4):
+            break
+
             
     yield from drivetrain.turn_left(0.1, shimmy=True)
     yield from drivetrain.turn_right(0.1, shimmy=True)
@@ -327,9 +355,12 @@ def tester_auto_tail(tail):
 
 def tester_auto_intake(startup_system, drivetrain, intake):
     time.sleep(2)
+    #yield from intake.drop()
+    yield from intake.lift()
+    yield from intake.seek(3)
+    yield from intake.lift()
 
-    yield from intake.drop()
-    
+    """
     while intake.duck_state == Intake.NOT_DETECTED_DUCK:
         yield from intake.seek(2)
 
@@ -340,6 +371,7 @@ def tester_auto_intake(startup_system, drivetrain, intake):
 
     yield from intake.intake_while_drop(2)
     yield from intake.intake_while_lift(3)
+    """
 
 
 #    time.sleep(1)

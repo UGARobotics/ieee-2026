@@ -65,7 +65,7 @@ class Intake:
         now = time.monotonic()
         end_time = now + duration
         self.main_servo.move(-0.5)
-        self.lift_servo.set_angle(40)
+        self.lift_servo.set_angle(x0)
 
         while time.monotonic() < end_time:
             yield
@@ -77,7 +77,7 @@ class Intake:
         now = time.monotonic()
         end_time = now + duration
         self.main_servo.move(-1.0)
-        self.lift_servo.set_angle(170)
+        self.lift_servo.set_angle(117)
 
         while time.monotonic() < end_time:
             yield
@@ -89,7 +89,7 @@ class Intake:
         now = time.monotonic()
         end_time = now + duration
         self.main_servo.move(-1.0)
-        self.lift_servo.set_angle(170)
+        self.lift_servo.set_angle(150)
 
         while time.monotonic() < end_time:
             yield
@@ -108,17 +108,17 @@ class Intake:
         self.main_servo.move(0.0)
 
     def lift(self):
-        self.lift_servo.set_angle(20)
+        self.lift_servo.set_angle(0)
         while self.lift_servo.state == PositionalServo.RUNNING:
             yield
 
     def drop(self):
-        self.lift_servo.set_angle(170)
+        self.lift_servo.set_angle(150)
         while self.lift_servo.state == PositionalServo.RUNNING:
             yield
             
     def drop_outtake_height(self):
-        self.lift_servo.set_angle(140)
+        self.lift_servo.set_angle(100)
         while self.lift_servo.state == PositionalServo.RUNNING:
             yield
             
