@@ -34,7 +34,7 @@ class StartupSystem:
         elif self.state == StartupSystem.WAITING:
             # Check status of light sensor
             
-            if self.light_sensor.state == LightSensor.DETECTED:
+            if self.light_sensor.state == LightSensor.DETECTED or not self._is_high():
                 self.state = StartupSystem.RUNNING
         else:
             # Either not looking for light or already running, so do nothing
