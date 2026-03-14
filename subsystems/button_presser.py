@@ -17,12 +17,12 @@ class ButtonPresser:
             yield
 
     def press_second(self):
-        self.servo.set_angle(165)
+        self.servo.set_angle(168)
         while self.servo.state == PositionalServo.RUNNING:
             yield
 
     def press_first(self):
-        self.servo.set_angle(175)
+        self.servo.set_angle(178)
         while self.servo.state == PositionalServo.RUNNING:
             yield
     
