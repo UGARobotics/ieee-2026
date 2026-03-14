@@ -20,13 +20,13 @@ time.sleep(3)
 
 # initialize subsystems
 odometry = Odometry()
-intake = Intake()
 tail = Tail()
-button_presser = ButtonPresser()
-drivetrain = Drivetrain([front_left, front_right, back_left, back_right], odometry=odometry, intake=intake)
-
 startup_system = StartupSystem()
 
+button_presser = ButtonPresser(startup_system=startup_system)
+intake = Intake(startup_system=startup_system)
+
+drivetrain = Drivetrain([front_left, front_right, back_left, back_right], odometry=odometry, intake=intake)
 
 scheduler = Scheduler(tick_hz=50)
 scheduler.add_subsystem(drivetrain)

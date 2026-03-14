@@ -5,7 +5,7 @@ from utils.positional_servo import PositionalServo
 class ButtonPresser:
     """Subsystem for the button pressing mechanism"""
 
-    def __init__(self, pin=20, startup_system: StartupSystem):
+    def __init__(self, pin=20, startup_system: StartupSystem = None):
         self.servo = PositionalServo(pin, full_rotation_time = 3.8, initial_angle=280)
         self.startup_system = startup_system
 

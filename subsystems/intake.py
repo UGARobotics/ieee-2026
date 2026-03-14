@@ -19,13 +19,13 @@ class Intake:
             self,
             pins=[12, 16],
             canivore="Main",
-            startup_system: StartupSystem,
+            startup_system: StartupSystem = None,
             tof_window_size: int = 5
     ):
         self.main_servo = ContinuousServo(pins[0])
         self.lift_servo = PositionalServo(pins[1], initial_angle=20, full_rotation_time=2.8)
         self.tof = CANrange(0, canivore)
-        self.startup_system = startp_system
+        self.startup_system = startup_system
 
         self.duck_state = Intake.NOT_DETECTED_DUCK
         

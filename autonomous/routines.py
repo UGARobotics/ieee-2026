@@ -66,8 +66,9 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
     yield from button_presser.reset()
     yield from drivetrain.go_forward(8)
     yield from drivetrain.turn_right(0.75)
-    yield from drivetrain.strafe_right(7.5)
-    yield from drivetrain.go_backward(8.2)
+    yield from drivetrain.go_backward(2)
+    yield from drivetrain.strafe_right(8.8)
+    yield from drivetrain.go_backward(6.2)
 
     # should be near duck
 
@@ -96,8 +97,8 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
     yield from drivetrain.strafe_left_timed(1.4)
 
     yield from drivetrain.go_forward(20)
-    yield from drivetrain.strafe_right(21)
-    yield from drivetrain.turn_right(1)
+    yield from drivetrain.strafe_right(22)
+    yield from drivetrain.turn_right(0.8)
     yield from drivetrain.go_backward(5)
     
     # should be near duck
@@ -113,15 +114,15 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
     yield from intake.intake_while_drop(2)
     yield from intake.intake_while_lift(3)
 
-    yield from drivetrain.turn_left(1)
+    yield from drivetrain.turn_left(0.8)
     yield from drivetrain.strafe_right(6)
     yield from intake.drop_outtake_height()
     yield from intake.outtake(3)
     yield from intake.lift()    
 
     yield from drivetrain.strafe_left_timed(1.7)
-    yield from drivetrain.go_backward_timed(3.6)
-    yield from drivetrain.strafe_left_timed(2.1)
+    yield from drivetrain.go_backward_timed(3.3)
+    yield from drivetrain.strafe_left_timed(2.6)
 
     # STAGE 2: RIGHT HALF OF FIELD
 
