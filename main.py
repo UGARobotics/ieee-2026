@@ -40,9 +40,9 @@ scheduler.add_subsystem(startup_system)
 try:
     # this is going to run until the routine is complete
     # scheduler.run_routine(all_subsystems_test(drivetrain, odometry, intake, tail, button_presser,startup_system))
-    # scheduler.run_routine(core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, startup_system))
+    scheduler.run_routine(core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, startup_system))
     # scheduler.run_routine(tester_auto_button_presser(startup_system, drivetrain, button_presser))
-    scheduler.run_routine(tester_auto_intake(startup_system, drivetrain, intake))
+    # scheduler.run_routine(tester_auto_intake(startup_system, drivetrain, intake))
     # scheduler.run_routine(tester_auto_tail(tail))
     
 
