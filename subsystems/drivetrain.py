@@ -23,7 +23,7 @@ class Drivetrain:
             self.intake.lift_servo.set_angle(100)
         elif seeking:
             self.intake.main_servo.move(-1.0)
-            self.intake.lift_servo.set_angle(187)
+            self.intake.lift_servo.set_angle(160)
 
         self.motors[0].move(15)
         self.motors[1].move(-15)
