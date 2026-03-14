@@ -123,8 +123,13 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
     yield from intake.outtake(3)
     yield from intake.lift()
 
-    # we go for third duck
-    
+    # after, we go for the fourth antenna
+    # then, we scurry around the field to the side
+    # pickup duck on the way
+    # push away other duck to the side or avoid it altogether
+    # try to do the second antenna w duck sucked
+    # push duck into area
+    # drop grabbed duck into area
 
     """
     yield from button_presser.unpress()
