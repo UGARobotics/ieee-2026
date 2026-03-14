@@ -30,6 +30,8 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
         drone.stop()
         drone.disconnect()
     """
+
+    # STAGE 1: FIRST HALF OF FIELD
     
     # drop off dawg
     yield from drivetrain.go_forward(15)
@@ -59,16 +61,6 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
     yield from button_presser.unpress()
     yield from button_presser.press_second()
     yield from button_presser.unpress()
-    
-    """
-    yield from drivetrain.strafe_right(0.25)
-    yield from drivetrain.strafe_left(0.25)
-    yield from drivetrain.strafe_right(0.25)
-    yield from drivetrain.strafe_left(0.25)
-    yield from drivetrain.strafe_right(0.25)
-    yield from drivetrain.strafe_left(0.25)
-    yield from button_presser.unpress()
-    """
     
     yield from drivetrain.strafe_right(8)
     yield from button_presser.reset()
@@ -130,7 +122,73 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
     yield from drivetrain.strafe_left_timed(1.7)
     yield from drivetrain.go_backward_timed(3.6)
     yield from drivetrain.strafe_left_timed(2.1)
+
+    # STAGE 2: RIGHT HALF OF FIELD
+
     # we go for third duck
+    yield from drivetrain.go_forward(20)
+    yield from drivetrain.strafe_right(30)
+    yield from drivetrain.turn_right(0.5)
+    yield from drivetrain.strafe_right(3)
+
+    # we need to get this as close to keypad as possible
+    # TODO: DELETE
+    return
+
+    # 7
+    yield from drivetrain.go_backward(0.14)
+    yield from drivetrain.strafe_right(0.13)
+    time.sleep(0.5)
+    yield from button_presser.press_third()
+    yield from button_presser.unpress()
+    time.sleep(0.5)
+    
+    # 3
+    yield from drivetrain.go_forward(0.29)
+    yield from drivetrain.strafe_right(0.293)
+    time.sleep(0.5)
+    yield from button_presser.press_first()
+    yield from button_presser.unpress()
+    time.sleep(0.5)
+
+    # 7
+    yield from drivetrain.go_backward(0.29)
+    yield from drivetrain.strafe_left(0.293)
+    time.sleep(0.5)
+    yield from button_presser.press_third()
+    yield from button_presser.unpress()
+    time.sleep(0.5)
+
+    # 3
+    yield from drivetrain.go_forward(0.29)
+    yield from drivetrain.strafe_right(0.293)
+    time.sleep(0.5)
+    yield from button_presser.press_first()
+    yield from button_presser.unpress()
+    time.sleep(0.5)
+
+    # 8
+    yield from drivetrain.go_backward(0.15)
+    yield from drivetrain.strafe_left(0.293)
+    time.sleep(0.5)
+    yield from button_presser.press_third()
+    yield from button_presser.unpress()
+    time.sleep(0.5)
+
+    # #
+    yield from drivetrain.go_forward(0.15)
+    yield from drivetrain.strafe_left(0.13)
+    time.sleep(0.5)
+    yield from button_presser.press_fourth()
+    yield from button_presser.unpress()
+    time.sleep(0.5)
+
+    # TODO: DELETE
+    return
+
+    yield from drivetrain.strafe_right(6)
+    yield from drivetrain.turn_right(0.75)
+    yield from drivetrain.go_forward(18)
 
     # after, we go for the fourth antenna
     # then, we scurry around the field to the side
