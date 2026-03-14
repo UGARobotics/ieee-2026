@@ -40,9 +40,13 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
 
     yield from drivetrain.go_backward_timed(2.5)
     yield from drivetrain.strafe_left(2)
-    yield from drivetrain.go_forward(6)
-    yield from button_presser.unpress()
-    yield from drivetrain.go_backward(6)
+    yield from drivetrain.go_forward(4)
+    yield from drivetrain.turn_left(0.125)
+    yield from drivetrain.strafe_left(1)
+    yield from button_presser.dogoff()
+    yield from drivetrain.strafe_right(1)
+    yield from drivetrain.turn_right(0.125)
+    yield from drivetrain.go_backward(4)
     yield from drivetrain.strafe_left(2.33)
 
     # should be somewhere near the antenna
@@ -125,7 +129,7 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
 
     yield from drivetrain.strafe_left_timed(1.7)
     yield from drivetrain.go_backward_timed(3.6)
-    yield from drivetrain.strafe_left_timed(1.7)
+    yield from drivetrain.strafe_left_timed(2.1)
     # we go for third duck
 
     # after, we go for the fourth antenna

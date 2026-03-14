@@ -31,6 +31,11 @@ class ButtonPresser:
         while self.servo.state == PositionalServo.RUNNING:
             yield
 
+    def dogoff(self):
+        self.servo.set_angle(160)
+        while self.servo.state == PositionalServo.RUNNING:
+            yield
+
     def reset(self):
         self.servo.set_angle(280)
         while self.servo.state == PositionalServo.RUNNING:
