@@ -39,13 +39,11 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
     yield from drivetrain.turn_left(1)
 
     yield from drivetrain.go_backward_timed(2.5)
-
-    yield from drivetrain.go_forward(3)
-    yield from drivetrain.turn_right(0.25)
+    yield from drivetrain.strafe_left(2)
+    yield from drivetrain.go_forward(6)
     yield from button_presser.unpress()
-    yield from drivetrain.turn_left(0.25)
-    yield from drivetrain.go_backward(2.65)
-    yield from drivetrain.strafe_left(4.33)
+    yield from drivetrain.go_backward(6)
+    yield from drivetrain.strafe_left(2.33)
 
     # should be somewhere near the antenna
 
