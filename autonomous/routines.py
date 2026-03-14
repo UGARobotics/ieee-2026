@@ -7,50 +7,68 @@ from subsystems.tail import Tail
 from utils.drone import Drone
 
 
+import cflib.crtp
+from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
+from cflib.positioning.motion_commander import MotionCommander
+
+
+
 """Contains all of the different autonomous routines/runs over time. """
 def drone_flight():
+    URI = 'radio://0/80/2M/E7E7E7E7E7'
 
-    try: 
-        drone = Drone()
-        if drone.connect():
-            drone.takeoff()
-            # fly forward
-            for _ in range(200):
+    cflib.crtp.init_drivers(enable_debug_driver=False)
+
+    with SyncCrazyflie(URI) as scf:
+        scf.cf.platform.send_arming_request(True)
+        time.sleep(1.0)
+
+        # We take off when the commander is created
+        with MotionCommander(scf) as mc:
+            print('Taking off!')
+            mc.take_off()
+            time.sleep(1)
+            for _ in range(50 * 1):
                 yield
 
-            drone.move_left(0.1)
-            # move right
-            for _ in range(200):
+            # There is a set of functions that move a specific distance
+            # We can move in all directions
+            print('Moving forward 0.5m')
+
+            mc.forward(0.5)
+            # Wait a bit
+            for _ in range(50 * 1):
+                yield
+                            
+            mc.up(0.2)
+            # Wait a bit
+            for _ in range(50 * 1):
+                yield
+                            
+            print('Rolling left 0.2m at 0.6m/s')
+            mc.right(0.2, velocity=0.6)
+            # Wait a bit
+            for _ in range(50 * 1):
                 yield
 
-            drone.up(0.1)
-            # stop movement
-            for _ in range(200):
-
-                yield
-
-            drone.land()
-
-            for _ in range(500):
-                yield
-
-    except:
-        print(":(")
-    finally:
-        drone.stop()
-        drone.disconnect()
+            # We land when the MotionCommander goes out of scope
+            print('Landing!')
+        
+    
         
 def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, startup_system):
 
     while startup_system.state != StartupSystem.RUNNING:
         yield
-
-    # yield from drone_flight()
+    yield from drivetrain.go_forward(15) 
+    yield from drone_flight()
     # STAGE 1: FIRST HALF OF FIELD
+
     
     # drop off dawg
-    yield from drivetrain.go_forward(15)    
+
     yield from drivetrain.strafe_right(8)
+    return 
     yield from drivetrain.go_forward(4)
     yield from drivetrain.turn_left(0.5)
 
