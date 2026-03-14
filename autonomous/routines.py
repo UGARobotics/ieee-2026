@@ -124,9 +124,6 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
     yield from intake.lift()
 
     # we go for third duck
-
-    
-
     
 
     """
@@ -187,22 +184,43 @@ def tester_auto_button_presser(startup_system, drivetrain, button_presser):
     # while startup_system.state != StartupSystem.RUNNING:
     #    yield
 
+    # 73738#
     yield from button_presser.unpress()
     time.sleep(1)
-    yield from button_presser.press_fourth()
-    #yield from drivetrain.strafe_left(0.25)
-    yield from button_presser.unpress()
-    yield from drivetrain.strafe_right(0.25)
-    time.sleep(1)
+    # 7
+    yield from drivetrain.go_backward(0.25)
     yield from button_presser.press_third()
-    yield from drivetrain.strafe_left(0.15)
     yield from button_presser.unpress()
-    yield from drivetrain.strafe_right(0.25)
     time.sleep(1)
+    # 3
+    yield from drivetrain.strafe_right(0.35)
+    yield from drivetrain.go_forward(0.5)
     yield from button_presser.press_first()
-    yield from drivetrain.strafe_left(0.15)
     yield from button_presser.unpress()
-    yield from drivetrain.strafe_right(0.25)
+    time.sleep(1)
+    # 7
+    yield from drivetrain.strafe_left(0.35)
+    yield from drivetrain.go_backward(0.5)
+    yield from button_presser.press_third()
+    yield from button_presser.unpress()
+    time.sleep(1)
+    # 3
+    yield from drivetrain.strafe_right(0.35)
+    yield from drivetrain.go_forward(0.5)
+    yield from button_presser.press_first()
+    yield from button_presser.unpress()
+    # 8
+    yield from drivetrain.strafe_left(0.35)
+    yield from drivetrain.go_backward(0.25)
+    yield from button_presser.press_third()
+    yield from button_presser.unpress()
+    time.sleep(1)
+    # #
+    yield from drivetrain.strafe_left(0.15)
+    yield from drivetrain.go_forward(0.25)
+    yield from button_presser.press_fourth()
+    yield from button_presser.unpress()
+    time.sleep(1)
 
 
 def tester_auto_tail(tail):
