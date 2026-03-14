@@ -104,3 +104,12 @@ class Drone:
 # -----------------------------
 # MAIN PROCEDURE
 # -----------------------------
+drone = Drone()
+
+if drone.connect():
+    drone.move_up(0.3)
+    drone.hover(1)
+    drone.move_right(0.1)
+    drone.hover(1)
+    drone.land()
+
