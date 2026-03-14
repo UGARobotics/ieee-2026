@@ -44,13 +44,12 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
 
     while startup_system.state != StartupSystem.RUNNING:
         yield
-    """
-    yield from drivetrain.go_forward(15)
+
     # yield from drone_flight()
     # STAGE 1: FIRST HALF OF FIELD
     
     # drop off dawg
-    
+    yield from drivetrain.go_forward(15)    
     yield from drivetrain.strafe_right(8)
     yield from drivetrain.go_forward(4)
     yield from drivetrain.turn_left(0.5)
@@ -87,13 +86,8 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
 
     # should be near duck
 
-    ctr = 0
     while intake.duck_state == Intake.NOT_DETECTED_DUCK:
         yield from drivetrain.go_forward(1.6, seeking=True)
-        ctr += 1
-        print(ctr)
-        if ctr >= 2:
-            break
     
     yield from drivetrain.turn_left(0.1, shimmy=True)
     yield from drivetrain.turn_right(0.1, shimmy=True)
@@ -110,7 +104,6 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
 
     yield from drivetrain.turn_left(0.75)
     # should be near duck
-    yield from drivetrain.strafe_left(3)
 
     while intake.duck_state == Intake.NOT_DETECTED_DUCK:
         yield from drivetrain.go_forward(1.6, seeking=True)
@@ -151,15 +144,11 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
     yield from drivetrain.go_backward_timed(2)
     yield from drivetrain.strafe_right_timed(1)
 
-    """
+
 #    time.sleep(1)
 
-    ctr = 0    
     while intake.duck_state == Intake.NOT_DETECTED_DUCK:
-        yield from drivetrain.go_forward(1.7, seeking=True)
-        ctr += 1
-        if ctr >= (50 * 4):
-            break
+        yield from drivetrain.go_forward(2.2, seeking=True)
 
             
     yield from drivetrain.turn_left(0.1, shimmy=True)
@@ -171,7 +160,7 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
     yield from drivetrain.go_forward(21)
     yield from drivetrain.strafe_left(28)
     yield from drivetrain.turn_left(1)
-    yield from drivetrain.strafe_right_timed(2)
+    yield from drivetrain.strafe_right_timed(1.3)
     yield from drivetrain.go_backward_timed(1)
     yield from drivetrain.strafe_right_timed(1)
     yield from drivetrain.go_forward(39)
@@ -182,15 +171,17 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
     yield from intake.lift()
 
     yield from drivetrain.go_backward_timed(3.9)
-    yield from drivetrain.strafe_left(21)
-    yield from drivetrain.turn_right(1)
-    yield from drivetrain.go_backward(2)
-    yield from drivetrain.strafe_left(3)
+    yield from drivetrain.strafe_left(32)
+    yield from drivetrain.turn_left(0.5)
+    yield from drivetrain.strafe_right(8)
+
+    yield from drivetrain.go_backward(3)
+#    yield from drivetrain.strafe_left(3)
 
     # should be near duck
 
     while intake.duck_state == Intake.NOT_DETECTED_DUCK:
-        yield from intake.intake_while_drop(1.3)
+        yield from drivetrain.go_forward(1.7, seeking=True)
             
     yield from drivetrain.turn_left(0.1, shimmy=True)
     yield from drivetrain.turn_right(0.1, shimmy=True)
@@ -198,11 +189,36 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
     yield from drivetrain.turn_right(0.1, shimmy=True)
     yield from intake.lift()
 
-    yield from drivetrain.turn_left(0.5)
-    yield from drivetrain.strafe_left_timed(2.2)
-    yield from drivetrain.go_backward(12)
-    yield from tail.wag(tail.TIME_PER_WAG)
+    yield from drivetrain.strafe_left(1.3)
+    yield from drivetrain.turn_left(1)
+    yield from drivetrain.strafe_left_timed(3)
+    yield from drivetrain.go_forward_timed(1)
+    yield from drivetrain.strafe_left_timed(0.5)
 
+    yield from drivetrain.go_backward_timed(4.05)
+    yield from tail.wag(tail.TIME_PER_WAG * 2)
+    yield from drivetrain.go_forward_timed(4)
+    yield from drivetrain.go_backward(2)
+    yield from drivetrain.strafe_right(2)
+    yield from drivetrain.turn_left(0.5)
+    yield from drivetrain.strafe_left(3)
+    yield from drivetrain.go_forward_timed(5.3)
+    yield from drivetrain.strafe_right(2)
+    yield from drivetrain.turn_left(0.25)
+
+    yield from drivetrain.go_forward(18)
+    yield from drivetrain.turn_left(0.25)
+    yield from drivetrain.strafe_left(1)
+    yield from intake.drop_outtake_height()
+    yield from intake.outtake(2)
+    yield from intake.lift()
+
+    yield from drivetrain.strafe_left_timed(3.2)
+    yield from drivetrain.go_backward_timed(3.2)
+    yield from drivetrain.strafe_left_timed(1)
+    yield from drivetrain.go_backward_timed(1)
+    
+    
     # after, we go for the fourth antenna
     # then, we scurry around the field to the side
     # pickup duck on the way
