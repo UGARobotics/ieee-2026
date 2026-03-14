@@ -35,15 +35,17 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
     yield from drivetrain.go_forward(15)
     yield from drivetrain.strafe_right(14)
     yield from drivetrain.turn_right(0.5)
-    yield from drivetrain.go_forward(7)
-    yield from button_presser.unpress()
-    yield from drivetrain.go_backward(7)
     yield from drivetrain.strafe_right(4)
     yield from drivetrain.turn_left(1)
-    # TODO: swap to timed
+
     yield from drivetrain.go_backward_timed(2.5)
-    yield from drivetrain.go_forward(0.35)
-    yield from drivetrain.strafe_left(4.20)
+
+    yield from drivetrain.go_forward(3)
+    yield from drivetrain.turn_right(0.25)
+    yield from button_presser.unpress()
+    yield from drivetrain.turn_left(0.25)
+    yield from drivetrain.go_backward(2.65)
+    yield from drivetrain.strafe_left(4.33)
 
     # should be somewhere near the antenna
 
@@ -124,7 +126,10 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
     yield from intake.lift()
 
     # we go for third duck
-    
+
+    yield from drivetrain.strafe_left_timed(1.7)
+    yield from drivetrain.go_backward_timed(3.6)
+    yield from drivetrain.strafe_left_timed(1.7)
 
     """
     yield from button_presser.unpress()
