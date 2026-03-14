@@ -160,10 +160,11 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
     yield from intake.outtake(1)
     yield from intake.lift()
 
+    yield from drivetrain.go_backward(20)
     yield from drivetrain.strafe_left(7)
-    yield from drivetrain.turn_right(0.75)
-    yield from drivetrain.strafe_left(20)
-
+    yield from drivetrain.turn_right(1)
+    yield from drivetrain.strafe_right(7)
+    
     # after, we go for the fourth antenna
     # then, we scurry around the field to the side
     # pickup duck on the way
