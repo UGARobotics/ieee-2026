@@ -1,4 +1,5 @@
 import time
+import threading
 
 from subsystems.startup_system import StartupSystem
 from subsystems.intake import Intake
@@ -7,35 +8,33 @@ from utils.drone import Drone
 
 
 """Contains all of the different autonomous routines/runs over time. """
+def drone_flight():
+    #time.sleep(5)
+    try: 
+        drone = Drone()
+        if drone.connect():
+            drone.takeoff()
+            for _ in range(500):
+                yield
 
+            drone.land()
+    except:
+        print(":(")
+    finally:
+        drone.stop()
+        drone.disconnect()
+        
 def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, startup_system):
 
     while startup_system.state != StartupSystem.RUNNING:
         yield
     
-    """
-    try:
-        drone = Drone()
-        if drone.connect():
-            drone.takeoff()
-            drone.move_right(0.5)
-            drone.land()
-            #drone.takeoff()
-            #drone.move_up(0.5)
-            #drone.move_left(0.5)
-            #drone.land()
-
-    except KeyboardInterrupt:
-        print (":(")
-    finally:
-        drone.stop()
-        drone.disconnect()
-    """
-    """
+    yield from drivetrain.go_forward(15)
+    yield from drone_flight()
     # STAGE 1: FIRST HALF OF FIELD
 
     # drop off dawg
-    yield from drivetrain.go_forward(15)
+    
     yield from drivetrain.strafe_right(8)
     yield from drivetrain.go_forward(4)
     yield from drivetrain.turn_left(0.5)
@@ -130,7 +129,7 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
     yield from drivetrain.go_backward_timed(2)
     yield from drivetrain.strafe_right_timed(1)
 
-    """
+
     time.sleep(1)
     while intake.duck_state == Intake.NOT_DETECTED_DUCK:
         yield from drivetrain.go_forward(1.7, seeking=True)
