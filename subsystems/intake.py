@@ -89,7 +89,7 @@ class Intake:
         now = time.monotonic()
         end_time = now + duration
         self.main_servo.move(-1.0)
-        self.lift_servo.set_angle(190)
+        self.lift_servo.set_angle(170)
 
         while time.monotonic() < end_time:
             yield

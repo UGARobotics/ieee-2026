@@ -131,7 +131,7 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
     yield from drivetrain.strafe_right_timed(1)
 
     """
-
+    time.sleep(1)
     while intake.duck_state == Intake.NOT_DETECTED_DUCK:
         yield from drivetrain.go_forward(1.7, seeking=True)
             
@@ -141,37 +141,38 @@ def core_odometry_routine(drivetrain, odometry, intake, tail, button_presser, st
     yield from drivetrain.turn_right(0.1, shimmy=True)
     
     yield from intake.intake_while_lift(2)
-    yield from drivetrain.go_forward(20)
+    yield from drivetrain.go_forward(21)
     yield from drivetrain.strafe_left(28)
     yield from drivetrain.turn_left(1)
-    yield from drivetrain.strafe_right_timed(3)
-    yield from drivetrain.go_forward(27)
+    yield from drivetrain.strafe_right_timed(2)
+    yield from drivetrain.go_backward_timed(1)
+    yield from drivetrain.strafe_right_timed(1)
+    yield from drivetrain.go_forward(39)
     yield from drivetrain.go_backward(10)
     
     yield from intake.drop_outtake_height()
     yield from intake.outtake(1)
     yield from intake.lift()
 
-    yield from drivetrain.strafe_left(7)
-    yield from drivetrain.turn_right(0.5)
-    yield from drivetrain.go_backward_timed(0.7)
-    yield from drivetrain.strafe_left(20)
-
-    yield from drivetrain.go_forward(20)
-    yield from drivetrain.turn_right(0.5)
+    yield from drivetrain.go_backward_timed(3.9)
+    yield from drivetrain.strafe_left(21)
+    yield from drivetrain.turn_right(1)
+    yield from drivetrain.go_backward(2)
+    yield from drivetrain.strafe_left(3)
 
     # should be near duck
 
     while intake.duck_state == Intake.NOT_DETECTED_DUCK:
-        yield from drivetrain.go_forward(1.7, seeking=True)
+        yield from intake.intake_while_drop(1.3)
             
     yield from drivetrain.turn_left(0.1, shimmy=True)
     yield from drivetrain.turn_right(0.1, shimmy=True)
     yield from drivetrain.turn_left(0.1, shimmy=True)
     yield from drivetrain.turn_right(0.1, shimmy=True)
+    yield from intake.lift()
 
-    yield from drivetrain.turn_right(0.5)
-    yield from drivetrain.strafe_left_timed(1)
+    yield from drivetrain.turn_left(0.5)
+    yield from drivetrain.strafe_left_timed(2.2)
     yield from drivetrain.go_backward(12)
     yield from tail.wag(tail.TIME_PER_WAG)
 
