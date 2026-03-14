@@ -1,7 +1,10 @@
 from phoenix6.hardware.canrange import CANrange
 
+from subsystems.startup_system import StartupSystem
+
 from utils.continuous_servo import ContinuousServo
 from utils.positional_servo import PositionalServo
+
 from collections import deque
 
 import time
@@ -16,11 +19,13 @@ class Intake:
             self,
             pins=[12, 16],
             canivore="Main",
+            startup_system: StartupSystem,
             tof_window_size: int = 5
     ):
         self.main_servo = ContinuousServo(pins[0])
         self.lift_servo = PositionalServo(pins[1], initial_angle=20, full_rotation_time=2.8)
         self.tof = CANrange(0, canivore)
+        self.startup_system = startp_system
 
         self.duck_state = Intake.NOT_DETECTED_DUCK
         
@@ -135,6 +140,9 @@ class Intake:
         self.tof_averaged_distance = self.tof_window_sum / len(self.tof_readings_window)
     
     def update(self):
+        if self.startup_system.state == StartupSystem.WAITING:
+            pass
+
         self.main_servo.update()
         self.lift_servo.update()
 

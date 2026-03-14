@@ -1,10 +1,13 @@
+from subsystems.startup_system import StartupSystem
+
 from utils.positional_servo import PositionalServo
 
 class ButtonPresser:
     """Subsystem for the button pressing mechanism"""
 
-    def __init__(self, pin=20):
+    def __init__(self, pin=20, startup_system: StartupSystem):
         self.servo = PositionalServo(pin, full_rotation_time = 3.8, initial_angle=280)
+        self.startup_system = startup_system
 
     def press_fourth(self):
         self.servo.set_angle(145)
@@ -45,4 +48,7 @@ class ButtonPresser:
         self.servo.stop()
 
     def update(self):
+        if self.startup_system.state == StartupSystem.WAITING:
+            pass
+
         self.servo.update()
