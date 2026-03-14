@@ -183,8 +183,62 @@ def tester_auto_button_presser(startup_system, drivetrain, button_presser):
 
     # while startup_system.state != StartupSystem.RUNNING:
     #    yield
+    """
 
+    """
     # 73738#
+    
+    # 7
+    yield from drivetrain.go_backward(0.14)
+    yield from drivetrain.strafe_right(0.13)
+    time.sleep(0.5)
+    yield from button_presser.press_third()
+    yield from button_presser.unpress()
+    time.sleep(0.5)
+    
+    # 3
+    yield from drivetrain.go_forward(0.29)
+    yield from drivetrain.strafe_right(0.293)
+    time.sleep(0.5)
+    yield from button_presser.press_first()
+    yield from button_presser.unpress()
+    time.sleep(0.5)
+
+    # 7
+    yield from drivetrain.go_backward(0.29)
+    yield from drivetrain.strafe_left(0.293)
+    time.sleep(0.5)
+    yield from button_presser.press_third()
+    yield from button_presser.unpress()
+    time.sleep(0.5)
+
+    # 3
+    yield from drivetrain.go_forward(0.29)
+    yield from drivetrain.strafe_right(0.293)
+    time.sleep(0.5)
+    yield from button_presser.press_first()
+    yield from button_presser.unpress()
+    time.sleep(0.5)
+
+    # 8
+    yield from drivetrain.go_backward(0.15)
+    yield from drivetrain.strafe_left(0.293)
+    time.sleep(0.5)
+    yield from button_presser.press_third()
+    yield from button_presser.unpress()
+    time.sleep(0.5)
+
+    # #
+    yield from drivetrain.go_forward(0.15)
+    yield from drivetrain.strafe_left(0.13)
+    time.sleep(0.5)
+    yield from button_presser.press_fourth()
+    yield from button_presser.unpress()
+    time.sleep(0.5)
+    
+
+    """
+    SIDE 2 SIDE:
     yield from button_presser.press_fourth()
     time.sleep(1)
     yield from button_presser.unpress()
@@ -204,16 +258,19 @@ def tester_auto_button_presser(startup_system, drivetrain, button_presser):
     yield from button_presser.unpress()
     time.sleep(0.5)
 
-    """
+
+    UP N DOWN:
     yield from button_presser.press_fourth()
     time.sleep(1)
     yield from button_presser.unpress()
     time.sleep(0.5)
+
     yield from drivetrain.strafe_right(0.13)
     yield from button_presser.press_third()
     time.sleep(1)
     yield from button_presser.unpress()
     time.sleep(0.5)
+
     yield from drivetrain.strafe_right(0.153)
     yield from button_presser.press_second()
     time.sleep(0.5)
@@ -223,47 +280,6 @@ def tester_auto_button_presser(startup_system, drivetrain, button_presser):
     yield from button_presser.press_first()
     time.sleep(1)
     yield from button_presser.unpress()
-    """
-
-    
-    """
-    yield from button_presser.unpress()
-    time.sleep(1)
-    # 7
-    yield from drivetrain.go_backward(0.25)
-    yield from button_presser.press_third()
-    yield from button_presser.unpress()
-    time.sleep(1)
-    # 3
-    yield from drivetrain.strafe_right(0.4)
-    yield from drivetrain.go_forward(0.5)
-    yield from button_presser.press_first()
-    yield from button_presser.unpress()
-    time.sleep(1)
-    # 7
-    yield from drivetrain.strafe_left(0.4)
-    yield from drivetrain.go_backward(0.5)
-    yield from button_presser.press_third()
-    yield from button_presser.unpress()
-    time.sleep(1)
-    # 3
-    yield from drivetrain.strafe_right(0.4)
-    yield from drivetrain.go_forward(0.5)
-    yield from button_presser.press_first()
-    yield from button_presser.unpress()
-    # 8
-    yield from drivetrain.strafe_left(0.4)
-    yield from drivetrain.go_backward(0.25)
-    yield from button_presser.press_third()
-    yield from button_presser.unpress()
-    time.sleep(1)
-    # #
-    yield from drivetrain.strafe_left(0.15)
-    yield from drivetrain.go_forward(0.25)
-    yield from button_presser.press_fourth()
-    yield from button_presser.unpress()
-    time.sleep(1)
-
     """
 
 
