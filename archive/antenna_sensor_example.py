@@ -1,5 +1,5 @@
 """
-Example usage of AntennaSensor for detecting antenna colors
+Example usage of AntennaSensor for detecting antenna colors with visual display
 """
 
 from camera_filter import AntennaSensor
@@ -7,27 +7,28 @@ import cv2
 import numpy as np
 import time
 
-# Initialize sensor with half-resolution for Raspberry Pi performance
-sensor = AntennaSensor(camera_id=0, certainty_threshold=0.6, scale=0.5)
+# Initialize sensor
+sensor = AntennaSensor(camera_id=0, certainty_threshold=0.6, scale=1.0)  # scale=1.0 for full resolution display
 
-print("Antenna Sensor initialized. Press Ctrl+C to exit.\n")
+print("Antenna Sensor initialized. Press ESC to exit.\n")
 
-def display_detection():
-    """Display frame with circle detection and color classification"""
+def display_with_bounding_box():
+    """Display live feed with circle detection and bounding boxes"""
+    frame_count = 0
+    
     try:
         while True:
-            # Keep camera stream updated
+            # Update stream
             sensor.update()
-            
-            # Get current frame for visualization
             frame = sensor.current_frame
+            
             if frame is None:
+                print("No frame captured")
                 continue
             
-            # Detect antenna color
-            color = sensor.detect_color()
+            display_frame = frame.copy()
             
-            # Process frame for visualization
+            # Convert to grayscale for circle detection
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             blurred = cv2.GaussianBlur(gray, (5, 5), 1)
             
@@ -40,54 +41,69 @@ def display_detection():
                 param1=30,
                 param2=20,
                 minRadius=15,
-                maxRadius=100
+                maxRadius=150
             )
             
-            display_frame = frame.copy()
+            circle_found = False
             
-            if circles is not None:
+            if circles is not None and len(circles[0]) > 0:
                 circles = np.uint16(np.around(circles))
                 
                 for i in circles[0, :]:
                     center = (i[0], i[1])
                     radius = i[2]
+                    circle_found = True
                     
-                    # Draw circle outline
-                    cv2.circle(display_frame, center, radius, (0, 255, 0), 2)
+                    # Draw green circle outline
+                    cv2.circle(display_frame, center, radius, (0, 255, 0), 3)
                     
-                    # Draw bounding box
+                    # Draw blue bounding box
                     x1 = max(0, center[0] - radius)
                     y1 = max(0, center[1] - radius)
                     x2 = min(frame.shape[1], center[0] + radius)
                     y2 = min(frame.shape[0], center[1] + radius)
-                    cv2.rectangle(display_frame, (x1, y1), (x2, y2), (255, 0, 0), 2)
+                    cv2.rectangle(display_frame, (x1, y1), (x2, y2), (255, 0, 0), 3)
                     
-                    # Extract circle region for color
+                    # Get color classification
                     mask = np.zeros(frame.shape[:2], dtype=np.uint8)
                     cv2.circle(mask, center, radius, 255, -1)
                     circle_pixels = frame[mask == 255]
                     
-                    if len(circle_pixels) > 0:
-                        avg_color = np.mean(circle_pixels, axis=0).astype(np.uint8)
+                    color = sensor.detect_color()
+                    color_text = f"Color: {color}" if color else "Color: UNCERTAIN"
+                    
+                    # Put text with color info
+                    cv2.putText(display_frame, color_text, (center[0] - 50, center[1] - radius - 20),
+                                cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 255, 0), 2)
             
-            # Display detected color
-            status_text = f"Color: {color if color else 'UNCERTAIN'}"
-            cv2.putText(display_frame, status_text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            # Show status
+            status = "CIRCLE FOUND" if circle_found else "NO CIRCLE"
+            cv2.putText(display_frame, status, (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
+            cv2.putText(display_frame, f"Frame: {frame_count}", (10, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
             
-            # Show frame
-            cv2.imshow("Antenna Sensor", display_frame)
+            # Display
+            cv2.imshow("ANTENNA DETECTION - Press ESC to exit", display_frame)
             
-            print(f"Detected: {color if color else 'UNCERTAIN'}")
+            # Save frame for inspection
+            if frame_count % 10 == 0:
+                cv2.imwrite(f"antenna_frame_{frame_count}.jpg", display_frame)
+                print(f"Frame {frame_count}: {status}")
             
-            if cv2.waitKey(1) & 0xFF == 27:  # ESC to exit
+            frame_count += 1
+            
+            # ESC key to exit
+            if cv2.waitKey(30) & 0xFF == 27:
                 break
-
-    except KeyboardInterrupt:
-        print("\nShutting down...")
+    
+    except Exception as e:
+        print(f"Error: {e}")
+    
     finally:
+        print("Shutting down...")
         sensor.shutdown()
         cv2.destroyAllWindows()
 
 
 if __name__ == "__main__":
-    display_detection()
+    display_with_bounding_box()
+
